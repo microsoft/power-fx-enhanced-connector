@@ -1,33 +1,18 @@
-# Project
+# CDP Tabular Connector Samples 
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+This provides a sample of how to write a CDP Tabular Connector. 
 
-As the maintainer of this project, please make a few updates:
+Documentation for protocol is here:
+https://aka.ms/PowerFxCDP
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+- CdpSampleWebAPI - a REST ASP to impl CDP. Runs as an ASP.Net WebAPI. 
 
-## Contributing
+- CdpValidator - a client-side API that can be pointed at a CDP endpoint to validate it. This can point to existing connectors (hosted in APIM) or to localhost (such as locally running CdpSampleWebAPI)
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+## CdpSampleWebAPI
+This is implemented on top of Power Fx definitions, notably `RecordType`. These are C# classes that already describe tabular operations: 
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+https://github.com/microsoft/Power-Fx/blob/main/src/libraries/Microsoft.PowerFx.Core/Public/Types/RecordType.cs
 
-## Trademarks
-
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+You can clone this repo, and override `ITableProvider` to provide your datasource. This project will then plumb between `RecordType` and CDP protocol. 

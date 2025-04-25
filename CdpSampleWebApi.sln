@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CdpSampleWebApi", "CdpSampleWebApi\CdpSampleWebApi.csproj", "{202A48F4-8D94-4B86-96AC-62DA04F7AB27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F450A37F-6989-4A32-BB8C-E4E6DFC0342B}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.Props = Directory.Build.Props
+		nuget.config = nuget.config
+		PowerFx.ruleset = PowerFx.ruleset
+		PowerFx.Tests.ruleset = PowerFx.Tests.ruleset
+		PowerFxBuild.Props = PowerFxBuild.Props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CdpValidator", "CdpValidator\CdpValidator.csproj", "{A46F8AF8-0636-4EA7-B3D9-190219AEC410}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdpHelpers", "CdpHelpers\CdpHelpers.csproj", "{6F6638CD-45BD-4C13-B4BC-FD7CF3DF4AD3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B57C4A2E-7C3E-4A8D-9DD1-383758735A1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdpHelpers.Tests", "Tests\CdpHelpers.Tests\CdpHelpers.Tests.csproj", "{BCA7D531-F746-4566-B573-BF2AC36978C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{202A48F4-8D94-4B86-96AC-62DA04F7AB27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202A48F4-8D94-4B86-96AC-62DA04F7AB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202A48F4-8D94-4B86-96AC-62DA04F7AB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202A48F4-8D94-4B86-96AC-62DA04F7AB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A46F8AF8-0636-4EA7-B3D9-190219AEC410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A46F8AF8-0636-4EA7-B3D9-190219AEC410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A46F8AF8-0636-4EA7-B3D9-190219AEC410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A46F8AF8-0636-4EA7-B3D9-190219AEC410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F6638CD-45BD-4C13-B4BC-FD7CF3DF4AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F6638CD-45BD-4C13-B4BC-FD7CF3DF4AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F6638CD-45BD-4C13-B4BC-FD7CF3DF4AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F6638CD-45BD-4C13-B4BC-FD7CF3DF4AD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BCA7D531-F746-4566-B573-BF2AC36978C5} = {B57C4A2E-7C3E-4A8D-9DD1-383758735A1A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD3D15C4-8E2D-464E-B48E-4266ECC81508}
+	EndGlobalSection
+EndGlobal

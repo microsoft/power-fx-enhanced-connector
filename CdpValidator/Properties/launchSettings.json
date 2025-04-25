@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "CdpValidator": {
+      "commandName": "Project",
+      "commandLineArgs_exob": "-auth C:\\temp\\cxs\\apim-exob.json -logdir C:\\temp\\cxs\\log",
+      "commandLineArgs_sf": "-auth C:\\temp\\cxs\\apim-sf.json -logdir C:\\temp\\cxs\\log",
+      "commandLineArgs_sp": "-auth C:\\temp\\cxs\\apim-sp.json -logdir C:\\temp\\cxs\\log",
+      "commandLineArgs_sql": "-auth C:\\temp\\cxs\\apim-sql.json -logdir C:\\temp\\cxs\\logsql",
+      "commandLineArgs_mike": "-auth C:\\temp\\cxs\\real-db.json -logdir C:\\temp\\cxs\\log\\6",
+      "commandLineArgs": "-auth C:\\temp\\cxs\\databricks.json -logdir C:\\temp\\cxs\\log"
+    }
+  }
+}

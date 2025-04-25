@@ -1,0 +1,22 @@
+@CdpSampleWebApi_HostAddress = https://localhost:7157
+
+@Dataset=d1 
+@TableName=MyTable 
+
+### Get Metadata 
+GET {{CdpSampleWebApi_HostAddress}}/$metadata.json/datasets
+
+### Get Datasets 
+GET {{CdpSampleWebApi_HostAddress}}/datasets
+
+### Get Tables 
+GET {{CdpSampleWebApi_HostAddress}}/datasets/{{Dataset}}/tables
+
+### GEt table schema 
+GET {{CdpSampleWebApi_HostAddress}}/$metadata.json/datasets/{{Dataset}}/tables/{{TableName}}
+
+###  Get values from a table 
+GET {{CdpSampleWebApi_HostAddress}}/datasets/{{Dataset}}/tables/{{TableName}}/items
+Accept: application/json
+
+
