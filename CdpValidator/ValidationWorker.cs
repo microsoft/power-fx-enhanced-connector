@@ -574,7 +574,7 @@ namespace CdpValidator
         {
             FxFilterExpression filter = new FxFilterExpression(FxFilterOperator.And);
 
-            if (fields == null || nFilter == 0 || !rows.Any())
+            if (fields == null || nFilter == 0 || !rows.Any() || rows.First().Fields.Count() == 0)
             {
                 return filter;
             }
@@ -594,6 +594,7 @@ namespace CdpValidator
                         "StringType" => ((StringValue)fv).Value,
                         "DecimalType" => ((DecimalValue)fv).Value,
                         "NumberType" => ((NumberValue)fv).Value,
+                        "DateTimeType" => ((DateTimeValue)fv).GetConvertedValue(TimeZoneInfo.Utc),
 
                         // $$$ Add more types
                         _ => throw new NotImplementedException($"Unknown type {fv.Type.GetType().Name}")
@@ -609,7 +610,7 @@ namespace CdpValidator
         [Obsolete("preview")]
         private IList<OrderExpression> GetOrderBy(NamedFormulaType[] fields, int nOrderBy)
         {
-            if (nOrderBy == 0)
+            if (nOrderBy == 0 || nOrderBy > fields.Count())
             {
                 return null;
             }
@@ -632,7 +633,8 @@ namespace CdpValidator
                    FormulaType.Number.Equals(ft) ||
                    FormulaType.Decimal.Equals(ft) ||
                    FormulaType.Guid.Equals(ft) ||
-                   FormulaType.DateTime.Equals(ft);
+                   FormulaType.DateTime.Equals(ft) ||
+                   FormulaType.Boolean.Equals(ft);
         }
 
         private async Task<IEnumerable<RecordValue>> ValidateGetItems(string progressMessage, string message, Func<int, string> getError, ValidationDelegationParameters delegationParams, Func<int, bool> test, bool expectError, Context context)
@@ -955,28 +957,52 @@ namespace CdpValidator
                         if (currentValue is StringValue sv)
                         {
                             string previous = ((StringValue)previousValue).Value;
+                            string current = sv.Value;
 
-                            if (string.Compare(previous, sv.Value, StringComparison.OrdinalIgnoreCase) > 0)
+                            if (string.Compare(previous, current, StringComparison.OrdinalIgnoreCase) > 0)
                             {
-                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value {previous} is not ordered properly ({sv.Value} is lower)");
+                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
                             }
                         }
                         else if (currentValue is DecimalValue dv)
                         {
                             decimal previous = ((DecimalValue)previousValue).Value;
+                            decimal current = dv.Value;
 
-                            if (previous > dv.Value)
+                            if (previous > current)
                             {
-                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value {previous} is not ordered properly ({dv.Value} is lower)");
+                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
                             }
-                        } 
+                        }
                         else if (currentValue is NumberValue nv)
                         {
                             double previous = ((NumberValue)previousValue).Value;
+                            double current = nv.Value;
 
-                            if (previous > nv.Value)
+                            if (previous > current)
                             {
-                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value {previous} is not ordered properly ({nv.Value} is lower)");
+                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
+                            }
+                        }
+                        else if (currentValue is DateTimeValue dtv)
+                        {
+                            DateTime previous = ((DateTimeValue)previousValue).GetConvertedValue(TimeZoneInfo.Utc);
+                            DateTime current = dtv.GetConvertedValue(TimeZoneInfo.Utc);
+
+                            if (previous > current)
+                            {
+                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
+                            }
+                        }
+                        else if (currentValue is BooleanValue bv)
+                        {
+                            bool previous = ((BooleanValue)previousValue).Value;
+                            bool current = bv.Value;
+
+                            // false is considered to be lower than true
+                            if (previous && !current)
+                            {
+                                tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
                             }
                         }
                         else
@@ -986,7 +1012,7 @@ namespace CdpValidator
                     }
 
                     previousValue = currentValue;
-                }                
+                }
             }
 #pragma warning restore CS0618 // Type or member is obsolete
         }
