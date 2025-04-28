@@ -574,7 +574,7 @@ namespace CdpValidator
         {
             FxFilterExpression filter = new FxFilterExpression(FxFilterOperator.And);
 
-            if (fields == null || nFilter == 0 || !rows.Any() || rows.First().Fields.Count() == 0)
+            if (fields == null || nFilter == 0 || !rows.Any() || !rows.First().Fields.Any())
             {
                 return filter;
             }
