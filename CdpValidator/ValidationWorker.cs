@@ -378,7 +378,7 @@ namespace CdpValidator
 
                     _tables = new List<CdpTable>() { table };
                 }
-
+                
                 foreach (CdpTable currenttable in _tables)
                 {
                     try
@@ -574,7 +574,7 @@ namespace CdpValidator
         {
             FxFilterExpression filter = new FxFilterExpression(FxFilterOperator.And);
 
-            if (fields == null || nFilter == 0 || !rows.Any() || !rows.First().Fields.Any())
+            if (fields == null || nFilter == 0 || !rows.Any() || !(rows.First().Fields.Count() >= nFilter) || fields.Length < nFilter)
             {
                 return filter;
             }
@@ -595,6 +595,7 @@ namespace CdpValidator
                         "DecimalType" => ((DecimalValue)fv).Value,
                         "NumberType" => ((NumberValue)fv).Value,
                         "DateTimeType" => ((DateTimeValue)fv).GetConvertedValue(TimeZoneInfo.Utc),
+                        "BooleanType" => ((BooleanValue)fv).Value,
 
                         // $$$ Add more types
                         _ => throw new NotImplementedException($"Unknown type {fv.Type.GetType().Name}")
@@ -959,7 +960,7 @@ namespace CdpValidator
                             string previous = ((StringValue)previousValue).Value;
                             string current = sv.Value;
 
-                            if (string.Compare(previous, current, StringComparison.OrdinalIgnoreCase) > 0)
+                            if (string.Compare(previous, current, StringComparison.Ordinal) > 0)
                             {
                                 tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
                             }
