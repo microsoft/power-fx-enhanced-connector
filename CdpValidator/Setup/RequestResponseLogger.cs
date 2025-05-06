@@ -153,10 +153,11 @@ namespace CdpValidator
 
             if (_outputDir != null)
             {               
-                var body = await response.Content.ReadAsStringAsync(cancel).ConfigureAwait(false);
+                string body = await response.Content.ReadAsStringAsync(cancel).ConfigureAwait(false);                
 
                 // Pretty print the body... (also validate it's correctly formatted)
-                if (response.Content?.Headers?.ContentType?.MediaType == "application/json")
+                if (!body.Contains("\"error_code\":", StringComparison.OrdinalIgnoreCase) && 
+                    response.Content?.Headers?.ContentType?.MediaType == "application/json")
                 {                   
                     JsonElement json = JsonSerializer.Deserialize<JsonElement>(body);
                     body = JsonSerializer.Serialize(json, new JsonSerializerOptions { WriteIndented = true });                                               

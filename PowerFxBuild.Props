@@ -8,10 +8,10 @@
 
 	<PropertyGroup>
 		<!-- Get latest Dataverse from: https://msazure.visualstudio.com/DefaultCollection/OneAgile/_artifacts/feed/Power-Fx/NuGet/Microsoft.PowerFx.Dataverse.Eval -->
-		<PowerFxDataverseVersion>[1.3.0]</PowerFxDataverseVersion>
+		<PowerFxDataverseVersion>1.4.0-build.20250430-1002</PowerFxDataverseVersion>
 
 		<!-- And then set this to it's Microsoft.PowerFx.Core dependency -->
-		<PowerFxVersion>[1.3.0]</PowerFxVersion>
+		<PowerFxVersion>1.4.0-build.20250505-1001</PowerFxVersion>
 
 		<!-- This is version Dataverse uses -->
 		<ODataVersion>[7.20.0]</ODataVersion>
