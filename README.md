@@ -67,10 +67,10 @@ Initial checks
 - List of datasets (/datasets)
 
 For each dataset (except if the dataset is specified in the config file, where only one dataset will be tested)
-- Get list of tables (/datasets/{datasetName}/tables)
+- Get list of tables (/datasets/\{datasetName\}/tables)
 
 For each table in the dataset[s] (except if the table is specified in the config file, where only onle table will be tested)
-- Get table schema (/$metadata.json/datasets/{datasetName}/tables/{tableName})
+- Get table schema (/$metadata.json/datasets/\{datasetName\}/tables/\{tableName\})
 - Validate each field type (cannot be Untyped Object or missing/undefined)
 - Retrieve one row with $top and verify we only get one row (or zero)
 - Retrieve 100 rows with $top and verify we get at most 100 rows
@@ -84,7 +84,7 @@ The column that is used is the first having a String or Number or Decimal or Gui
 For tables with 5 or more rows, following tests are executed otherwise a warning is generated (and those tests skipped)
 - Retrieve 10 rows using $filter with 1 field, equal operator (eq) and the value of the 1st row for that column
 - Retrieve 10 rows using $filter with 2 fields, equal operator (eq) and the values of the 1st row for these columns
-- Try retrieving 10 rows with an invalid $filter syntax ($filter=<space>)
+- Try retrieving 10 rows with an invalid $filter syntax ($filter=\<space\>)
 - Retrieve 10 rows using $orderby with one column
 - Retrieve 10 rows using $orderby with 3 columns
 
