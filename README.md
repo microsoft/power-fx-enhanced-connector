@@ -1,9 +1,6 @@
-# CDP Tabular Connector Samples 
+# Enhanced Power Platform connector with structured data 
 
-This provides a sample of how to write a CDP Tabular Connector. 
-
-Documentation for protocol is here:
-https://aka.ms/PowerFxCDP
+This provides a sample of how to create an enhanced Power Platform connector that supports structured data and knowledge sources.
 
 - CdpSampleWebAPI - a REST ASP to impl CDP. Runs as an ASP.Net WebAPI. 
 
