@@ -7,6 +7,8 @@ using Microsoft.PowerFx.Types;
 
 namespace CdpValidator
 {
+    internal delegate bool ValidateObject(object x, object y);
+
 #pragma warning disable CS0618 // Type or member is obsolete
     internal class ValidationDelegationParameters : DataverseDelegationParameters
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -21,6 +23,8 @@ namespace CdpValidator
         // Allow us to inject any filter we want
         // Note that this filter will later be Uri-encoded
         public string RawFilter { get; init; }
+
+        public ValidateObject Validate;
 
         public override string GetOdataFilter()
         {
