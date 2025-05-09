@@ -312,8 +312,71 @@ namespace CdpValidator
         }
 
         [Obsolete("preview")]
-        private async Task ValidateInternal(CancellationToken cancellationToken)
+        private readonly Dictionary<FxConditionOperator, ValidateObject> _filterConditions = new Dictionary<FxConditionOperator, ValidateObject>()
         {
+            { FxConditionOperator.Equal, (x, y) => object.Equals(x, y) },
+            { FxConditionOperator.NotEqual, (x, y) => !object.Equals(x, y) },
+            { FxConditionOperator.GreaterEqual, (x, y) => GreaterOrEqual(x, y) },
+            { FxConditionOperator.GreaterThan, (x, y) => GreaterThan(x, y) },
+            { FxConditionOperator.LessEqual, (x, y) => LessOrEqual(x, y) },
+            { FxConditionOperator.LessThan, (x, y) => LessThan(x, y) }
+        };
+
+        private static bool GreaterOrEqual(object x, object y)
+        {
+            return x.GetType() != y.GetType()
+                ? throw new NotImplementedException("Can't compare non identical types")
+                : x switch
+            {
+                decimal d => d >= (decimal)y,
+                string str => string.Compare(str, (string)y, StringComparison.Ordinal) >= 0,
+                DateTime dt => dt >= (DateTime)y,
+                _ => throw new NotImplementedException($"Invalid type {x.GetType().Name}")
+            };
+        }
+
+        private static bool GreaterThan(object x, object y)
+        {
+            return x.GetType() != y.GetType()
+                ? throw new NotImplementedException("Can't compare non identical types")
+                : x switch
+                {
+                    decimal d => d > (decimal)y,
+                    string str => string.Compare(str, (string)y, StringComparison.Ordinal) > 0,
+                    DateTime dt => dt > (DateTime)y,
+                    _ => throw new NotImplementedException($"Invalid type {x.GetType().Name}")
+                };
+        }
+
+        private static bool LessOrEqual(object x, object y)
+        {
+            return x.GetType() != y.GetType()
+                ? throw new NotImplementedException("Can't compare non identical types")
+                : x switch
+                {
+                    decimal d => d <= (decimal)y,
+                    string str => string.Compare(str, (string)y, StringComparison.Ordinal) <= 0,
+                    DateTime dt => dt <= (DateTime)y,
+                    _ => throw new NotImplementedException($"Invalid type {x.GetType().Name}")
+                };
+        }
+
+        private static bool LessThan(object x, object y)
+        {
+            return x.GetType() != y.GetType()
+                ? throw new NotImplementedException("Can't compare non identical types")
+                : x switch
+                {
+                    decimal d => d < (decimal)y,
+                    string str => string.Compare(str, (string)y, StringComparison.Ordinal) < 0,
+                    DateTime dt => dt < (DateTime)y,
+                    _ => throw new NotImplementedException($"Invalid type {x.GetType().Name}")
+                };
+        }
+
+        [Obsolete("preview")]
+        private async Task ValidateInternal(CancellationToken cancellationToken)
+        {            
             cancellationToken.ThrowIfCancellationRequested();
 
             // Get dataset Metadata (these metadata are independent from the selected dataset)
@@ -489,12 +552,12 @@ namespace CdpValidator
 
                         // We need a few rows to test $filter
                         if (nRows >= 5)
-                        {
-                            // $filter with one column and using a value that we know is existing
-                            await ValidateGetItems("Getting items (filter 'eq' 1 column)...", "Filter 'eq'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 1), n => n > 10, false, context).ConfigureAwait(false);
-
-                            // $filter with two columns and using a value that we know is existing
-                            await ValidateGetItems("Getting items (filter 'eq' 2 columns)...", "Filter 'eq'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 2), n => n > 10, false, context).ConfigureAwait(false);
+                        { 
+                            foreach (KeyValuePair<FxConditionOperator, ValidateObject> kvp in _filterConditions)
+                            {                                
+                                await ValidateGetItems($"Getting items (filter '{kvp.Key}' 1 column)...", $"Filter '{kvp.Key}'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 1, conditionOperator: kvp), n => n > 10, false, context).ConfigureAwait(false);                                
+                                await ValidateGetItems($"Getting items (filter '{kvp.Key}' 2 columns)...", $"Filter '{kvp.Key}'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 2, conditionOperator: kvp), n => n > 10, false, context).ConfigureAwait(false);
+                            }
 
                             // Invalid "$filter= " option - should return 400
                             await ValidateGetItems("Getting items ($filter= )...", "Invalid '$filter= '", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, " "), n => n > 10, true, context).ConfigureAwait(false);
@@ -542,16 +605,25 @@ namespace CdpValidator
 
         [SuppressMessage("SpacingRules", "SA1010: Opening Square Brackets Must Be Spaced Correctly", Justification = "Not valid here")]
         [Obsolete("preview")]
-        private ValidationDelegationParameters GetDelegationParam(RecordType recordType, int top, IEnumerable<NamedFormulaType> fields = null, int nSelect = 0, IEnumerable<RecordValue> rows = null, int nFilter = 0, int nOrderBy = 0)
+        private ValidationDelegationParameters GetDelegationParam(
+            RecordType recordType, 
+            int top, 
+            IEnumerable<NamedFormulaType> fields = null, 
+            int nSelect = 0, 
+            IEnumerable<RecordValue> rows = null, 
+            int nFilter = 0, 
+            int nOrderBy = 0,
+            KeyValuePair<FxConditionOperator, ValidateObject> conditionOperator = default)
         {
             IEnumerable<NamedFormulaType> selectedColumns = fields?.Where(nft => ShouldConsiderType(nft.Type));
 
             return new ValidationDelegationParameters(recordType)
             {
                 Top = top,
-                FxFilter = GetFilter(selectedColumns?.ToArray(), rows, nFilter),
+                FxFilter = GetFilter(selectedColumns?.ToArray(), rows, nFilter, conditionOperator.Key),
                 Columns = selectedColumns == null ? null : [.. selectedColumns.Take(nSelect).Select(nft => nft.Name.Value)],
-                OrderBy = GetOrderBy(selectedColumns?.ToArray(), nOrderBy)
+                OrderBy = GetOrderBy(selectedColumns?.ToArray(), nOrderBy),
+                Validate = conditionOperator.Value
             };
         }
 
@@ -570,7 +642,7 @@ namespace CdpValidator
         }
 
         [Obsolete("preview")]
-        private FxFilterExpression GetFilter(NamedFormulaType[] fields, IEnumerable<RecordValue> rows, int nFilter)
+        private FxFilterExpression GetFilter(NamedFormulaType[] fields, IEnumerable<RecordValue> rows, int nFilter, FxConditionOperator conditionOperator = FxConditionOperator.Equal)
         {
             FxFilterExpression filter = new FxFilterExpression(FxFilterOperator.And);
 
@@ -602,7 +674,7 @@ namespace CdpValidator
                     };
                 }
 
-                filter.AddCondition(new FxConditionExpression(fieldName, FxConditionOperator.Equal, val));
+                filter.AddCondition(new FxConditionExpression(fieldName, conditionOperator, val));
             }
 
             return filter;
@@ -922,19 +994,18 @@ namespace CdpValidator
                         FxConditionOperator op = cond.Operator;
                         object val = cond.Values.FirstOrDefault();
 
-                        if (op == FxConditionOperator.Equal)
+                        if (delegParams.Validate != null)
                         {
-                            FormulaValue fv = item.Value.GetField(attr);
-                            object recordValue = fv.ToObject();
+                            object recordValue = item.Value.GetField(attr).ToObject();
 
-                            if (!object.Equals(recordValue, val))
+                            if (!delegParams.Validate(recordValue, val))
                             {
                                 tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {attr} value {recordValue} doesn't match equality condition with value {val}");
                             }
                         }
                         else
                         {
-                            throw new NotImplementedException("Only 'eq' conditions are supported for now");
+                            throw new NotImplementedException($"Not supported condition {cond}");
                         }
                     }
                 }
