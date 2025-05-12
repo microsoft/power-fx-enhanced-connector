@@ -82,8 +82,8 @@ The column that is used is the first having a String or Number or Decimal or Gui
 - Retrieve 10 rows (with $top) and selecting 2 columns ($select), using the same column selection logic<br>
 
 For tables with 5 or more rows, following tests are executed otherwise a warning is generated (and those tests skipped)
-- Retrieve 10 rows using $filter with 1 field, equal operator (eq) and the value of the 1st row for that column
-- Retrieve 10 rows using $filter with 2 fields, equal operator (eq) and the values of the 1st row for these columns
+- Using eq, ne, gt, ge, lt, le operators (6 different queries), retrieve 10 rows using $filter with 1 field and using a value of the 1st row for that column
+- Using eq, ne, gt, ge, lt, le operators (6 different queries), retrieve 10 rows using $filter with 2 fields and using a value of the 1st row for these columns
 - Try retrieving 10 rows with an invalid $filter syntax ($filter=\<space\>)
 - Retrieve 10 rows using $orderby with one column
 - Retrieve 10 rows using $orderby with 3 columns
