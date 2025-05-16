@@ -43,6 +43,42 @@ namespace CdpSampleWebApi
                     NumField = 30,
                     StrField = "Thirty"
                 },
+                new
+                {
+                    NumField = 40,
+                    StrField = "Forty"
+                },
+                new
+                {
+                    NumField = 50,
+                    StrField = "Fifty"
+                },
+                new
+                {
+                    NumField = 60,
+                    StrField = "Sixty"
+                },
+                new
+                {
+                    NumField = 70,
+                    StrField = "Seventy"
+                },
+                new
+                {
+                    NumField = 80,
+                    StrField = "Eighty"
+                },
+                new
+                {
+                    NumField = 90,
+                    StrField = "Ninety"
+                },
+                new
+                {
+                    NumField = 100,
+                    StrField = "Hundred"
+                }
+
             });
 
             _tables[_tableName] = (TableValue)result;
