@@ -1,6 +1,6 @@
-# CDP Tabular Connector Samples 
+# CDP Enhanced Power Platform Connector Samples 
 
-This provides a sample of how to write a CDP Tabular Connector. 
+This provides a sample of how to write a CDP Enhanced Power Platform Connector. 
 
 Documentation for protocol is here:
 https://aka.ms/PowerFxCDP
