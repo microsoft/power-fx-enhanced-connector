@@ -1,0 +1,636 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.1",
+    "title": "CdpSample",
+    "description": "CdpSample Connector allows you to build canvas apps in Power Apps.",
+    "x-ms-api-annotation": {
+      "status": "Preview"
+    },
+    "x-ms-keywords": [
+      "CdpSample"
+    ]
+  },
+  "host": "testcdpconnector-sample5adar.eastus-01.azurewebsites.net",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/$metadata.json/datasets": {
+      "get": {
+        "tags": [
+          "CdpSampleDataSetsMetadata"
+        ],
+        "operationId": "GetDataSetsMetadata",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DataSetsMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/$metadata.json/datasets/{dataset}/tables/{tableName}": {
+      "get": {
+        "tags": [
+          "CdpSampleTableMetadata"
+        ],
+        "summary": "Get metadata of a table",
+        "description": "Get metadata of a table.",
+        "operationId": "CdpSampleMetadata",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "Name of dataset",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "description": "table name.",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TableMetadata"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },
+    "/datasets": {
+      "get": {
+        "tags": [
+          "CdpSampleDataSet"
+        ],
+        "summary": "Get datasets",
+        "description": "This operation gets datasets.",
+        "operationId": "GetDataSets",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DataSetsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    }, 
+    "/datasets/{datasets}/tables/{tableName}/items": {
+      "get": {
+        "tags": [
+          "CdpSampleTableData"
+        ],
+        "operationId": "ODataStyleGetItems",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "datasets",
+            "in": "path",
+            "description": "Name of datasets",
+            "required": true,
+            "x-ms-summary": "Datasets name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "description": "Name of CdpSample table",
+            "required": true,
+            "x-ms-summary": "Table name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          },
+          {
+            "name": "$apply",
+            "in": "query",
+            "description": "A sequence of OData aggregation transformations",
+            "required": false,
+            "x-ms-summary": "Aggregation transformation",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "An ODATA filter query to restrict the entries returned (e.g. stringColumn eq 'string' OR numberColumn lt 123).",
+            "required": false,
+            "x-ms-summary": "Filter Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "An ODATA orderBy query for specifying the order of entries.",
+            "required": false,
+            "x-ms-summary": "Order By",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          },
+          {
+            "name": "$skip",
+            "in": "query",
+            "description": "The number of entries to skip (default = 0).",
+            "required": false,
+            "x-ms-summary": "Skip Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$top",
+            "in": "query",
+            "description": "Total number of entries to retrieve (default = all).",
+            "required": false,
+            "x-ms-summary": "Top Count",
+            "x-ms-visibility": "advanced",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Specific fields to retrieve from entries (default = all).",
+            "required": false,
+            "x-ms-summary": "Select Query",
+            "x-ms-visibility": "advanced",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ItemsList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal"
+      }
+    },    
+    "/datasets/{dataset}/tables": {
+      "get": {
+        "tags": [
+          "CdpSampleTable"
+        ],
+        "summary": "Get object types",
+        "description": "This operation lists the available CdpSample object types.",
+        "operationId": "GetTables",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "dataset",
+            "in": "path",
+            "description": "Name of dataset",
+            "required": true,
+            "x-ms-summary": "Dataset name",
+            "x-ms-url-encoding": "double",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TablesList"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "internal",
+        "x-ms-pageable": {
+          "nextLinkName": "@odata.nextLink"
+        }
+      }
+    }    
+  },
+  "definitions": {
+    "BlobDataSetsMetadata": {
+      "description": "Blob dataset metadata",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Blob dataset source",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Blob dataset display name",
+          "type": "string"
+        },
+        "urlEncoding": {
+          "description": "Blob dataset url encoding",
+          "type": "string"
+        }
+      }
+    },
+    "DataSet": {
+      "description": "Dataset",
+      "type": "object",
+      "properties": {
+        "Name": {
+          "description": "Dataset name",
+          "type": "string"
+        },
+        "DisplayName": {
+          "description": "Dataset display name",
+          "type": "string"
+        },
+        "query": {
+          "description": "Pass-through Native Queries",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PassThroughNativeQuery"
+          },
+          "readOnly": true
+        }
+      }
+    },
+    "DataSetsList": {
+      "description": "List of datasets",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of datasets",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataSet"
+          }
+        }
+      }
+    },
+    "DataSetsMetadata": {
+      "description": "Dataset metadata",
+      "type": "object",
+      "properties": {
+        "tabular": {
+          "$ref": "#/definitions/TabularDataSetsMetadata"
+        },
+        "blob": {
+          "$ref": "#/definitions/BlobDataSetsMetadata"
+        }
+      }
+    },
+    "Item": {
+      "description": "Table item entity",
+      "type": "object",
+      "properties": {
+        "dynamicProperties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Object"
+          }
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/Object"
+      }
+    },
+    "ItemsList": {
+      "description": "List of Items",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of Items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Item"
+          }
+        }
+      }
+    },
+    "Object": {
+      "type": "object",
+      "properties": {}
+    },
+    "PassThroughNativeQuery": {
+      "description": "static schema for pass-through native query execution",
+      "type": "object",
+      "properties": {
+        "Language": {
+          "description": "Query language",
+          "type": "string"
+        }
+      }
+    },
+    "Table": {
+      "description": "Represents a table.",
+      "type": "object",
+      "properties": {
+        "Name": {
+          "description": "The name of the table. The name is used at runtime.",
+          "type": "string"
+        },
+        "DisplayName": {
+          "description": "The display name of the table.",
+          "type": "string"
+        },
+        "DynamicProperties": {
+          "description": "Additional table properties provided by the connector to the clients.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Object"
+          },
+          "readOnly": true
+        }
+      }
+    },
+    "TableCapabilitiesMetadata": {
+      "description": "Metadata for a table (capabilities)",
+      "type": "object",
+      "properties": {
+        "sortRestrictions": {
+          "$ref": "#/definitions/TableSortRestrictionsMetadata"
+        },
+        "filterRestrictions": {
+          "$ref": "#/definitions/TableFilterRestrictionsMetadata"
+        },
+        "selectRestrictions": {
+          "$ref": "#/definitions/TableSelectRestrictionsMetadata"
+        },
+        "isOnlyServerPagable": {
+          "description": "Server paging restrictions",
+          "type": "boolean"
+        },
+        "filterFunctionSupport": {
+          "description": "List of supported filter capabilities",
+          "type": "array",
+          "items": {
+            "enum": [
+              "eq",
+              "ne",
+              "gt",
+              "ge",
+              "lt",
+              "le",
+              "and",
+              "or",
+              "contains",
+              "startswith",
+              "endswith",
+              "length",
+              "indexof",
+              "replace",
+              "substring",
+              "substringof",
+              "tolower",
+              "toupper",
+              "trim",
+              "concat",
+              "year",
+              "month",
+              "day",
+              "hour",
+              "minute",
+              "second",
+              "date",
+              "time",
+              "now",
+              "totaloffsetminutes",
+              "totalseconds",
+              "floor",
+              "ceiling",
+              "round",
+              "not",
+              "negate",
+              "add",
+              "sub",
+              "mul",
+              "div",
+              "mod",
+              "sum",
+              "min",
+              "max",
+              "average",
+              "countdistinct",
+              "null"
+            ],
+            "type": "string"
+          }
+        },
+        "serverPagingOptions": {
+          "description": "List of supported server-driven paging capabilities",
+          "type": "array",
+          "items": {
+            "enum": [
+              "top",
+              "skiptoken"
+            ],
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TableFilterRestrictionsMetadata": {
+      "description": "Metadata for a table (filter restrictions)",
+      "type": "object",
+      "properties": {
+        "filterable": {
+          "description": "Indicates whether this table has filterable columns",
+          "type": "boolean"
+        },
+        "nonFilterableProperties": {
+          "description": "List of non filterable properties",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requiredProperties": {
+          "description": "List of required properties",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TableMetadata": {
+      "description": "Table metadata",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Table name",
+          "type": "string"
+        },
+        "title": {
+          "description": "Table title",
+          "type": "string"
+        },
+        "x-ms-permission": {
+          "description": "Table permission",
+          "type": "string"
+        },
+        "x-ms-capabilities": {
+          "$ref": "#/definitions/TableCapabilitiesMetadata"
+        },
+        "schema": {
+          "$ref": "#/definitions/Object"
+        },
+        "referencedEntities": {
+          "$ref": "#/definitions/Object"
+        },
+        "webUrl": {
+          "description": "URL link",
+          "type": "string"
+        }
+      }
+    },
+    "TableSelectRestrictionsMetadata": {
+      "description": "Metadata for a table (select restrictions)",
+      "type": "object",
+      "properties": {
+        "selectable": {
+          "description": "Indicates whether this table has selectable columns",
+          "type": "boolean"
+        }
+      }
+    },
+    "TablesList": {
+      "description": "Represents a list of tables.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of Tables",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Table"
+          }
+        }
+      }
+    },
+    "TableSortRestrictionsMetadata": {
+      "description": "Metadata for a table (sort restrictions)",
+      "type": "object",
+      "properties": {
+        "sortable": {
+          "description": "Indicates whether this table has sortable columns",
+          "type": "boolean"
+        },
+        "unsortableProperties": {
+          "description": "List of unsortable properties",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ascendingOnlyProperties": {
+          "description": "List of properties which support ascending order only",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TabularDataSetsMetadata": {
+      "description": "Tabular dataset metadata",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Dataset source",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Dataset display name",
+          "type": "string"
+        },
+        "urlEncoding": {
+          "description": "Dataset url encoding",
+          "type": "string"
+        },
+        "tableDisplayName": {
+          "description": "Table display name",
+          "type": "string"
+        },
+        "tablePluralName": {
+          "description": "Table plural display name",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-ms-capabilities": {
+    "testConnection": {
+      "operationId": "TestConnection",
+      "parameters": {}
+    }
+  },
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://www.localhost.com"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://www.localhost.com/privacy-policy"
+    }
+  ]
+}
