@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "capabilities": ["tabular", "federatedKnowledgeSource"],
+    "interfaces": {
+      "CDPTabular1": {
+        "revisions": {
+          "1": {
+            "baseUrl": "/",
+            "status": "Production"
+          }
+        }
+      }
+    },
+    "connectionParameters": {
+    },
+    "iconBrandColor": "#007EE6"
+  }
+}
