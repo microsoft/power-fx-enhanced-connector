@@ -499,7 +499,7 @@ namespace CdpValidator
                         var tableRecordType = tableValue.RecordType;
                         if (!tableRecordType.TryGetCapabilities(out var capabilities))
                         {
-                            tableErrors.AddError(UriPathAndQuery, "Missing capabilities", "Table has no x-ms-capabilities");
+                            tableErrors.AddError(UriPathAndQuery, "Missing capabilities", "Table has no x-ms-capabilities, the OData query delegation will not work");
                         }
 
                         CheckCapabilities(capabilities, tableErrors);
