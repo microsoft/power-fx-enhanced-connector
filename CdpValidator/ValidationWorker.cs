@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Connectors;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Dataverse.Eval.Delegation.QueryExpression;
 using Microsoft.PowerFx.Types;
@@ -47,7 +48,7 @@ namespace CdpValidator
         private StreamWriter _sw;
         private bool _hasError;
 
-        private string UriPathAndQuery => RequestUri?.PathAndQuery;
+        private string UriPathAndQuery => RequestUri?.PathAndQuery ?? string.Empty;
 
         private IEnumerable<RequestLog> RequestLog => _args._httpHandler._requestLog;
 
@@ -66,7 +67,7 @@ namespace CdpValidator
 
                     var rl = RequestLog.FirstOrDefault(r => r.StatusCode != HttpStatusCode.OK);
 
-                    return rl.Uri ?? RequestLog.First().Uri;
+                    return rl?.Uri ?? RequestLog.FirstOrDefault()?.Uri;
                 }
             }
         }
@@ -494,8 +495,28 @@ namespace CdpValidator
 
                         CdpTableValue tableValue = currenttable.GetTableValue();
 
+                        // check if delegation is enabled.
+                        var tableRecordType = tableValue.RecordType;
+                        if (!tableRecordType.TryGetCapabilities(out var capabilities))
+                        {
+                            tableErrors.AddError(UriPathAndQuery, "Missing capabilities", "Table has no x-ms-capabilities");
+                        }
+
+                        CheckCapabilities(capabilities, tableErrors);
+
                         foreach (string fieldName in tableValue.RecordType.FieldNames)
                         {
+                            var columnCapability = capabilities.GetColumnCapability(fieldName);
+
+                            if (columnCapability == null)
+                            {
+                                tableErrors.AddError(UriPathAndQuery, "Missing capabilities (Filter will not delegate)", $"Field {Display(fieldName)} has no x-ms-capabilities property in schema properties");
+                            }
+                            else if (columnCapability.FilterFunctions?.Any() != true)
+                            {
+                                tableErrors.AddError(UriPathAndQuery, "Missing capabilities (Filter will not delegate)", $"Field {Display(fieldName)} has no filterFunctions property in x-ms-capabilities inside schema properties");
+                            }
+
                             cancellationToken.ThrowIfCancellationRequested();
                             FormulaType ft = tableValue.RecordType.GetFieldType(fieldName);
 
@@ -601,6 +622,19 @@ namespace CdpValidator
                     }
                 }
             } // foreach dataset
+        }
+
+        private void CheckCapabilities(TableDelegationInfo capabilities, List<ValidationError> tableErrors)
+        {
+            if (capabilities.FilterRestriction == null)
+            {
+                tableErrors.AddError(UriPathAndQuery, "Missing capabilities", "\"x-ms-capabilities\": { \"filterRestrictions\": { \"filterable\": true }} is not set, Filter will not delegate");
+            }
+
+            if (capabilities.SortRestriction == null)
+            {
+                tableErrors.AddError(UriPathAndQuery, "Missing capabilities", "\"x-ms-capabilities\": { \"sortRestrictions\": { \"sortable\": true }} is not set, Sort will not delegate");
+            }
         }
 
         [SuppressMessage("SpacingRules", "SA1010: Opening Square Brackets Must Be Spaced Correctly", Justification = "Not valid here")]

@@ -54,7 +54,7 @@ namespace CdpValidator
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             using HttpRequestMessage req = await Transform(request).ConfigureAwait(false);
-            return await _invoker.SendAsync(req, cancellationToken).ConfigureAwait(false);
+            return await _invoker.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         // This will create a new request and send it. So the inner invoke can be another httpclient.
