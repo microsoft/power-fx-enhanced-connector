@@ -39,7 +39,7 @@ For running the validation with an APIM/CDP connector
 }
 ```
 
-Here is an example
+Here is an example (remove "connectionId" parameter when testing non-APIM endpoint during devlopment)
 
 ``` JSON
 {
