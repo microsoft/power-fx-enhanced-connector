@@ -78,7 +78,6 @@ namespace CdpSampleWebApi
                     NumField = 100,
                     StrField = "Hundred"
                 }
-
             });
 
             _tables[_tableName] = (TableValue)result;

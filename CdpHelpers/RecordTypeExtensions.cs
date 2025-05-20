@@ -4,8 +4,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using CdpHelpers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Dataverse;
 using Microsoft.PowerFx.Dataverse.Eval.Delegation.QueryExpression;
 using Microsoft.PowerFx.Types;
@@ -64,8 +67,6 @@ namespace Microsoft.PowerFx.Connectors
         // delegationInfo needed since each column has delegation info.
         public static TableSchemaPoco ToTableSchemaPoco(this RecordType record)
         {
-            record.TryGetCapabilities(out var delegationInfo);
-
             var fields = record.GetFieldTypes();
 
             var props = new Dictionary<string, TableSchemaPoco.ColumnInfo>();
@@ -101,7 +102,8 @@ namespace Microsoft.PowerFx.Connectors
                 ColumnCapabilitiesPoco capPoco = null;
                 string sort = null;
 
-                var columnCapability = delegationInfo?.GetColumnCapability(name);
+                var delegationInfo = new MockTableDelegationInfo();
+                var columnCapability = delegationInfo.GetColumnCapability(name);
                 if (columnCapability != null)
                 {
                     // $$$ Add capabilities here.
@@ -109,7 +111,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     // $$$ Get real capabilities.
                     // Need this on TableDelegationInfo
-                    sort = "asc,desc";
+                    sort = "none";
                 }
 
                 props[name] = new TableSchemaPoco.ColumnInfo
@@ -132,7 +134,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public static GetTableResponse ToTableResponse(this RecordType record, string tableName)
         {
-            record.TryGetCapabilities(out var delegationInfo);
+            // if you have record type, this could come from record.TryGetCapabilities(out var delegationInfo);
+            // this can be different for different table or datasource.
+            var delegationInfo = new MockTableDelegationInfo();
 
             var resp = new GetTableResponse
             {
