@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -81,7 +82,14 @@ namespace CdpValidator
             {
                 Console.WriteLine("No EnvironmentId, using direct connection");
 
-                httpClient.BaseAddress = new Uri(Connection.endpoint);
+                var endpoint = Connection.endpoint;
+
+                if (!endpoint.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !endpoint.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new InvalidOperationException($"Invalid endpoint: {endpoint}. Must start with http:// or https://");
+                }
+
+                httpClient.BaseAddress = new Uri(endpoint);
 
                 if (!string.IsNullOrEmpty(Connection.jwtFile))
                 {

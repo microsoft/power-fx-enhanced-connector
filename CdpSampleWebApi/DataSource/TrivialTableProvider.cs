@@ -62,18 +62,23 @@ namespace CdpSampleWebApi
 
         public async Task<RecordType> GetTableAsync(string dataset, string tableName, CancellationToken cancel = default)
         {
+            if (!_tables.ContainsKey(tableName))
+            {
+                throw new PowerFxConnectorException() { StatusCode = 404 };
+            }
+
             var type = _tables[tableName].Type;
 
             return type.ToRecord();
         }
 
-        public async Task<GetTablesResponse> GetTablesAsync(string dataset, CancellationToken cancel = default)
+        public async Task<GetTables> GetTablesAsync(string dataset, CancellationToken cancel = default)
         {
-            return new GetTablesResponse
+            return new GetTables
             {
-                Value = new List<RawTablePoco>
+                Value = new List<RawTable>
                  {
-                     new RawTablePoco
+                     new RawTable
                      {
                          Name = _tableName,
                          DisplayName = _tableName

@@ -59,7 +59,7 @@ namespace CdpSampleWebApi.Controllers
 
         [HttpGet]
         [Route("datasets/{dataset}/tables")]
-        public async Task<GetTablesResponse> GetTables(string dataset)
+        public async Task<GetTables> GetTables(string dataset)
         {           
             var provider = GetProvider();
             var result = await provider.GetTablesAsync(dataset, CancellationToken.None).ConfigureAwait(true);
@@ -69,7 +69,7 @@ namespace CdpSampleWebApi.Controllers
         // https://msazure.visualstudio.com/OneAgile/_wiki/wikis/OneAgile.wiki/715795/Connectors-(Internal)?anchor=%26%23x25b6%3B-get-table-metadata-(schema)
         [HttpGet]
         [Route("$metadata.json/datasets/{dataset}/tables/{tableName}")]
-        public async Task<GetTableResponse> GetTableInfo(
+        public async Task<GetTablePoco> GetTableInfo(
             string dataset,
             string tableName,
             [FromQuery(Name = "api-version")] string apiVersion)
@@ -77,7 +77,7 @@ namespace CdpSampleWebApi.Controllers
             var provider = GetProvider();
             RecordType record = await provider.GetTableAsync(dataset, tableName, CancellationToken.None).ConfigureAwait(true);
 
-            GetTableResponse resp = record.ToTableResponse(tableName);
+            GetTablePoco resp = record.ToTableResponse(tableName);
 
             return resp;
         }
