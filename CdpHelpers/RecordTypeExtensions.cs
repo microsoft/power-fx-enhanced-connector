@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             var fields = record.GetFieldTypes();
 
-            var props = new Dictionary<string, TableSchemaPoco.ColumnInfo>();
+            var props = new Dictionary<string, ColumnInfoPoco>();
 
             foreach (var field in fields)
             {
@@ -114,60 +114,60 @@ namespace Microsoft.PowerFx.Connectors
                     sort = "none";
                 }
 
-                props[name] = new TableSchemaPoco.ColumnInfo
+                props[name] = new ColumnInfoPoco
                 {
-                    title = displayName,
-                    type = typeStr,
-                    capabilities = capPoco,
-                    sort = sort
+                    Title = displayName,
+                    Type = typeStr,
+                    Capabilities = capPoco,
+                    Sort = sort
                 };
             }
 
             return new TableSchemaPoco
             {
-                items = new TableSchemaPoco.Items
+                Items = new ItemsPoco
                 {
-                    properties = props
+                    Properties = props
                 }
             };
         }
 
-        public static GetTableResponse ToTableResponse(this RecordType record, string tableName)
+        public static GetTablePoco ToTableResponse(this RecordType record, string tableName)
         {
             // if you have record type, this could come from record.TryGetCapabilities(out var delegationInfo);
             // this can be different for different table or datasource.
             var delegationInfo = new MockTableDelegationInfo();
 
-            var resp = new GetTableResponse
+            var resp = new GetTablePoco
             {
-                name = tableName,
-                permissions = "read-write",
-                schema = record.ToTableSchemaPoco()
+                Name = tableName,
+                Permissions = "read-write",
+                Schema = record.ToTableSchemaPoco()
             };
 
             if (delegationInfo != null && delegationInfo.IsDelegable)
             {
                 var c = new CapabilitiesPoco();
-                resp.capabilities = c;
+                resp.Capabilities = c;
 
-                c.odataVersion = 3;
+                c.OdataVersion = 3;
                 c.SetOps(delegationInfo.FilterSupportedFunctions);
 
                 if (delegationInfo.SortRestriction != null)
                 {
-                    c.sortRestrictions = new CapabilitiesPoco.Sort
+                    c.SortRestrictions = new Sort
                     {
-                        sortable = true,
-                        unsortableProperties = delegationInfo.SortRestriction.UnsortableProperties.ToArray()
+                        Sortable = true,
+                        UnsortableProperties = delegationInfo.SortRestriction.UnsortableProperties.ToArray()
                     };
                 }
 
                 if (delegationInfo.FilterRestriction != null)
                 {
-                    c.filterRestrictions = new CapabilitiesPoco.Filter
+                    c.FilterRestrictions = new Filter
                     {
-                        filterable = true,
-                        nonFilterableProperties = delegationInfo.FilterRestriction.NonFilterableProperties.ToArray()
+                        Filterable = true,
+                        NonFilterableProperties = delegationInfo.FilterRestriction.NonFilterableProperties.ToArray()
                     };
                 }
             }

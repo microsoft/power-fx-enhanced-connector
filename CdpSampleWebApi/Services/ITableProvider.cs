@@ -21,7 +21,7 @@ namespace CdpSampleWebApi
         public Task<DatasetResponse.Item[]> GetDatasetsAsync(CancellationToken cancellationToken = default);
 
         // Provider list of the tables.
-        public Task<GetTablesResponse> GetTablesAsync(string dataset, CancellationToken cancellationToken = default);
+        public Task<GetTables> GetTablesAsync(string dataset, CancellationToken cancellationToken = default);
 
         public Task<RecordType> GetTableAsync(string dataset, string tableName, CancellationToken cancellationToken = default);
 

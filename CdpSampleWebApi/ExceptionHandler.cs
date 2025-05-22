@@ -4,6 +4,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.PowerFx.Connectors;
 
 namespace CdpSampleWebApi
 {
@@ -23,11 +24,31 @@ namespace CdpSampleWebApi
                 RequestUri = $"{req.Path}{req.QueryString}",
                 Details = ex.ToString()
             };
+
+            var statusCode = 500;
+
+            if (ex is KeyNotFoundException)
+            {
+                statusCode = 404;
+            }
+            else if (ex is UnauthorizedAccessException)
+            {
+                statusCode = 401;
+            }
+            else if (ex is ArgumentException)
+            {
+                statusCode = 400;
+            }
+            else if (ex is PowerFxConnectorException connectorException)
+            {
+                statusCode = connectorException.StatusCode;
+            }
+
             context.Result = new ContentResult
             {
                 Content = JsonSerializer.Serialize(error),
                 ContentType = "application/json",
-                StatusCode = 500
+                StatusCode = statusCode
             };
         }
     }
