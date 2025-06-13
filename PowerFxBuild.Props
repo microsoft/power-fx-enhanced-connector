@@ -2,12 +2,12 @@
 <Project>
 
 	<!-- 
-		Get latest at https://msazure.visualstudio.com/DefaultCollection/OneAgile/_artifacts/feed/Power-Fx/NuGet/Microsoft.PowerFx.Dataverse.Eval    
-		See: https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files            
+		Get latest at https://www.nuget.org/packages/Microsoft.PowerFx.Dataverse.Eval/
+		See: https://learn.microsoft.com/nuget/consume-packages/package-references-in-project-files            
 	-->
 
 	<PropertyGroup>
-		<!-- Get latest Dataverse from: https://msazure.visualstudio.com/DefaultCollection/OneAgile/_artifacts/feed/Power-Fx/NuGet/Microsoft.PowerFx.Dataverse.Eval -->
+	
 		<PowerFxDataverseVersion>1.3.2</PowerFxDataverseVersion>
 
 		<!-- And then set this to it's Microsoft.PowerFx.Core dependency -->
