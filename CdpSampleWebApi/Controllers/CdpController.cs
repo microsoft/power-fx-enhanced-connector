@@ -66,7 +66,6 @@ namespace CdpSampleWebApi.Controllers
             return result;
         }
 
-        // https://msazure.visualstudio.com/OneAgile/_wiki/wikis/OneAgile.wiki/715795/Connectors-(Internal)?anchor=%26%23x25b6%3B-get-table-metadata-(schema)
         [HttpGet]
         [Route("$metadata.json/datasets/{dataset}/tables/{tableName}")]
         public async Task<GetTableResponse> GetTableInfo(
