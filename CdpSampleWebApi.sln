@@ -23,11 +23,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B57C4A2E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CdpHelpers.Tests", "Tests\CdpHelpers.Tests\CdpHelpers.Tests.csproj", "{BCA7D531-F746-4566-B573-BF2AC36978C5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CdpSampleArtifacts", "CdpSampleArtifacts", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerPlatformArtifacts", "PowerPlatformArtifacts", "{44A3C02B-7B09-4EED-8D06-8BD966ADE7C0}"
 	ProjectSection(SolutionItems) = preProject
-		CdpSampleArtifacts\apiDefinition.swagger.json = CdpSampleArtifacts\apiDefinition.swagger.json
-		CdpSampleArtifacts\apiProperties.json = CdpSampleArtifacts\apiProperties.json
-		CdpSampleArtifacts\settings.json = CdpSampleArtifacts\settings.json
+		PowerPlatformArtifacts\apiDefinition.swagger.json = PowerPlatformArtifacts\apiDefinition.swagger.json
+		PowerPlatformArtifacts\apiProperties.json = PowerPlatformArtifacts\apiProperties.json
+		PowerPlatformArtifacts\readme.md = PowerPlatformArtifacts\readme.md
+		PowerPlatformArtifacts\settings.json = PowerPlatformArtifacts\settings.json
 	EndProjectSection
 EndProject
 Global
