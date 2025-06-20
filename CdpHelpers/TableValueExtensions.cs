@@ -12,11 +12,17 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     /// <summary>
-    /// TableValue is only used for fetching runtime values.
-    /// All other type information is done at the record level, via <see cref="RecordTypeExtensions"/>.
+    /// Extension methods for <see cref="TableValue"/> to support OData item response generation.
     /// </summary>
     public static class TableValueExtensions
     {
+        /// <summary>
+        /// Converts a <see cref="TableValue"/> to a <see cref="GetItemsResponse"/> asynchronously, applying OData query parameters.
+        /// </summary>
+        /// <param name="tableValue">The table value to convert.</param>
+        /// <param name="odataParameters">OData query parameters to apply.</param>
+        /// <param name="cancellationToken">A cancellation token for the async operation.</param>
+        /// <returns>A <see cref="GetItemsResponse"/> containing the resulting items.</returns>
         public static async Task<GetItemsResponse> ToGetItemsResponseAsync(this TableValue tableValue, IDictionary<string, string> odataParameters, CancellationToken cancellationToken)
         {
             IEnumerable<RecordValue> results;
