@@ -8,13 +8,15 @@ using System.Collections.Generic;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // GetItems response
+    /// <summary>
+    /// Represents the response for a GetItems operation, containing a list of item values.
+    /// </summary>
     public class GetItemsResponse
     {
-        // List of values.
-        // Each value is propertyName --> propertyValue.
-        // Each property value should be number, string.
-        // Date is: "2024-10-25T15:23:31Z"
+        /// <summary>
+        /// Gets or sets the list of item values.
+        /// Each value is a dictionary mapping property names to property values (number, string, or date).
+        /// </summary>
         public List<Dictionary<string, object>> value { get; set; }
     }
 }
