@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
     /// Represents a standard error response payload for connectors.
     /// </summary>
     /// <remarks>
-    /// Example: { "statusCode": 404, "message": "Resource not found" }
+    /// Example: { "statusCode": 404, "message": "Resource not found" }.
     /// </remarks>
     public class ErrorResponse
     {
