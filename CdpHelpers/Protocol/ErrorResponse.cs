@@ -9,18 +9,22 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // Connectors should return errors in a standard payload schema.
-    // { "statusCode": 404, "message": "Resource not found" }
+    /// <summary>
+    /// Represents a standard error response payload for connectors.
+    /// </summary>
+    /// <remarks>
+    /// Example: { "statusCode": 404, "message": "Resource not found" }
+    /// </remarks>
     public class ErrorResponse
     {
 #pragma warning disable SA1300 // Element should begin with upper-case letter
         /// <summary>
-        /// The HttpStatusCode. 
+        /// Gets or sets the HTTP status code for the error.
         /// </summary>
         public int statusCode { get; set; }
 
         /// <summary>
-        /// A descriptive message of the error.
+        /// Gets or sets a descriptive message of the error.
         /// </summary>
         public string message { get; set; }
 #pragma warning restore SA1300 // Element should begin with upper-case letter
