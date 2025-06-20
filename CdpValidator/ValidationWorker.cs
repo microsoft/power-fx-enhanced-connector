@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
+﻿/*
+  Copyright (c) Microsoft Corporation.
+  Licensed under the MIT license.
+*/
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,9 @@ using static CdpValidator.Extensions;
 
 namespace CdpValidator
 {
+    /// <summary>
+    /// Performs validation of CDP datasets and tables, logging errors and warnings as needed.
+    /// </summary>
     [SuppressMessage("Design", "CA1001: Types that own disposable fields should be disposable", Justification = "Managed internally")]
     public class ValidationWorker
     {
@@ -141,6 +146,10 @@ namespace CdpValidator
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationWorker"/> class.
+        /// </summary>
+        /// <param name="args">The command-line arguments and configuration.</param>
         public ValidationWorker(Args args)
         {
             _args = args;
@@ -150,14 +159,20 @@ namespace CdpValidator
             _hasError = false;
         }
 
-        // Scan all all tables across all datasets .
+        /// <summary>
+        /// Scans all tables across all datasets and performs validation.
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token.</param>
         public async Task Validate(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
-                // Create .http file for errors   
+                /* 
+                 Create .http file for errors 
+                */
+
                 string httpFile = Path.Combine(_args.LogDir, "Errors.http");
                 _sw = new StreamWriter(httpFile, false, Encoding.UTF8);
                 WriteToHttpFile($"// CDP validation started on {DateTime.UtcNow.ToString("O")}");
@@ -166,9 +181,11 @@ namespace CdpValidator
                 LogProgress($"Errors will be reported in {httpFile}");
 
                 // Run validation
-#pragma warning disable CS0618 // Type or member is obsolete (preview)
+
+                // Type or member is obsolete (preview)
+#pragma warning disable CS0618 
                 await ValidateInternal(cancellationToken).ConfigureAwait(false);
-#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618 
             }
             finally
             {
@@ -328,12 +345,12 @@ namespace CdpValidator
             return x.GetType() != y.GetType()
                 ? throw new NotImplementedException("Can't compare non identical types")
                 : x switch
-            {
-                decimal d => d >= (decimal)y,
-                string str => string.Compare(str, (string)y, StringComparison.Ordinal) >= 0,
-                DateTime dt => dt >= (DateTime)y,
-                _ => throw new NotImplementedException($"Invalid type {x.GetType().Name}")
-            };
+                {
+                    decimal d => d >= (decimal)y,
+                    string str => string.Compare(str, (string)y, StringComparison.Ordinal) >= 0,
+                    DateTime dt => dt >= (DateTime)y,
+                    _ => throw new NotImplementedException($"Invalid type {x.GetType().Name}")
+                };
         }
 
         private static bool GreaterThan(object x, object y)
@@ -377,16 +394,20 @@ namespace CdpValidator
 
         [Obsolete("preview")]
         private async Task ValidateInternal(CancellationToken cancellationToken)
-        {            
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // Get dataset Metadata (these metadata are independent from the selected dataset)
-            // URL = /$metadata.json/datasets
+            /*
+                Get dataset Metadata (these metadata are independent from the selected dataset)
+                URL = /$metadata.json/datasets
+            */
             LogProgress("Getting metadata...");
             _datasetMetadata = await GetDatasetMetadataAsync(cancellationToken).ConfigureAwait(false);
 
-            // Get datasets
-            // URL = /datasets
+            /*
+                Get datasets
+                URL = /datasets
+            */
             LogProgress("Getting datasets...");
             ResetLog();
             IEnumerable<CdpDataSource> datasets = await GetDataSets(cancellationToken).ConfigureAwait(false);
@@ -417,9 +438,11 @@ namespace CdpValidator
                 Console.WriteLine();
                 LogProgress($"----- Current Dataset: {currentdataset.DatasetName} -----");
 
-                // Get tables (for a given dataset)
-                // URL /datasets/{datasetName}/tables
-                // Note that there is no "Get table" API in CDP, only "Get tables" which enumerates all tables
+                /*
+                    Get tables (for a given dataset)
+                    URL /datasets/{datasetName}/tables
+                    Note that there is no "Get table" API in CDP, only "Get tables" which enumerates all tables
+                */
                 LogProgress("Getting tables...");
                 ResetLog();
                 IEnumerable<CdpTable> tables = await GetTablesAsync(currentdataset, cancellationToken).ConfigureAwait(false);
@@ -442,7 +465,7 @@ namespace CdpValidator
 
                     _tables = new List<CdpTable>() { table };
                 }
-                
+
                 foreach (CdpTable currenttable in _tables)
                 {
                     try
@@ -454,8 +477,10 @@ namespace CdpValidator
 
                         try
                         {
-                            // Get Table Schema
-                            // /$metadata.json/datasets/{datasetName}/tables/{tableName}
+                            /*
+                                Get Table Schema
+                                /$metadata.json/datasets/{datasetName}/tables/{tableName}
+                            */
                             LogProgress("Getting table schema...");
                             ResetLog();
                             await currenttable.InitAsync(_args.HttpClient, _args.UrlPrefix, cancellationToken).ConfigureAwait(false);
@@ -536,8 +561,10 @@ namespace CdpValidator
                             LogErrors(tableErrors);
                         }
 
-                        // Read items
-                        // URL = /datasets/{datasetName}/tables/{tableName}/items
+                        /*
+                           Read items
+                           URL = /datasets/{datasetName}/tables/{tableName}/items
+                        */
 
                         RecordType rt = currenttable.RecordType;
                         Context context = new Context() { Currenttable = currenttable, TableErrors = tableErrors, TableValue = tableValue, CancellationToken = cancellationToken };
@@ -573,10 +600,10 @@ namespace CdpValidator
 
                         // We need a few rows to test $filter
                         if (nRows >= 5)
-                        { 
+                        {
                             foreach (KeyValuePair<FxConditionOperator, ValidateObject> kvp in _filterConditions)
-                            {                                
-                                await ValidateGetItems($"Getting items (filter '{kvp.Key}' 1 column)...", $"Filter '{kvp.Key}'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 1, conditionOperator: kvp), n => n > 10, false, context).ConfigureAwait(false);                                
+                            {
+                                await ValidateGetItems($"Getting items (filter '{kvp.Key}' 1 column)...", $"Filter '{kvp.Key}'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 1, conditionOperator: kvp), n => n > 10, false, context).ConfigureAwait(false);
                                 await ValidateGetItems($"Getting items (filter '{kvp.Key}' 2 columns)...", $"Filter '{kvp.Key}'", n => $"Returned too many rows: {n}", GetDelegationParam(rt, 10, fields, 0, rows, 2, conditionOperator: kvp), n => n > 10, false, context).ConfigureAwait(false);
                             }
 
@@ -598,7 +625,9 @@ namespace CdpValidator
                     {
                         LogException(string.Empty, ex);
                     }
-                } // foreach table
+                } 
+                
+                // foreach table
 
                 string invalidTableName = $"UnknownTable_{Guid.NewGuid()}";
 
@@ -621,7 +650,9 @@ namespace CdpValidator
                         return;
                     }
                 }
-            } // foreach dataset
+            } 
+            
+            // foreach dataset
         }
 
         private void CheckCapabilities(TableDelegationInfo capabilities, List<ValidationError> tableErrors)
@@ -640,12 +671,12 @@ namespace CdpValidator
         [SuppressMessage("SpacingRules", "SA1010: Opening Square Brackets Must Be Spaced Correctly", Justification = "Not valid here")]
         [Obsolete("preview")]
         private ValidationDelegationParameters GetDelegationParam(
-            RecordType recordType, 
-            int top, 
-            IEnumerable<NamedFormulaType> fields = null, 
-            int nSelect = 0, 
-            IEnumerable<RecordValue> rows = null, 
-            int nFilter = 0, 
+            RecordType recordType,
+            int top,
+            IEnumerable<NamedFormulaType> fields = null,
+            int nSelect = 0,
+            IEnumerable<RecordValue> rows = null,
+            int nFilter = 0,
             int nOrderBy = 0,
             KeyValuePair<FxConditionOperator, ValidateObject> conditionOperator = default)
         {
@@ -804,7 +835,11 @@ namespace CdpValidator
             return null;
         }
 
-        // URL = /$metadata.json/datasets
+        /// <summary>
+        /// Gets the dataset metadata for the connection.
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>The dataset metadata.</returns>
         public async Task<DatasetMetadata> GetDatasetMetadataAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -814,8 +849,10 @@ namespace CdpValidator
                 ResetLog();
                 DatasetMetadata datasetMetadata = await _root.GetDatasetMetadataAsync(cancellationToken).ConfigureAwait(false);
 
-                // datasetMetadata.DatasetFormat can be null                
-                // datasetMetadata.Parameters can be null
+                /*
+                   datasetMetadata.DatasetFormat can be null                
+                   datasetMetadata.Parameters can be null
+                */
 
                 if (!datasetMetadata.IsDoubleEncoding)
                 {
@@ -839,9 +876,11 @@ namespace CdpValidator
                         LogError("Get dataset metadata", $"DatasetMetadata Tabular UrlEncoding is not enabled ({Display(datasetMetadata.Tabular.UrlEncoding)})");
                     }
 
-                    // datasetMetadata.Tabular.TableDisplayName isn't used
-                    // datasetMetadata.Tabular.TablePluralName isn't used
-                    // datasetMetadata.Tabular.DisplayName isn't used
+                    /*
+                       datasetMetadata.Tabular.TableDisplayName isn't used
+                       datasetMetadata.Tabular.TablePluralName isn't used
+                       datasetMetadata.Tabular.DisplayName isn't used
+                    */
                 }
 
                 return datasetMetadata;
@@ -853,6 +892,12 @@ namespace CdpValidator
             }
         }
 
+        /// <summary>
+        /// Gets the tables for a given dataset.
+        /// </summary>
+        /// <param name="dataset">The dataset to get tables for.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>An enumerable of <see cref="CdpTable"/> objects.</returns>
         public async Task<IEnumerable<CdpTable>> GetTablesAsync(CdpDataSource dataset, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -879,6 +924,12 @@ namespace CdpValidator
             return tables;
         }
 
+        /// <summary>
+        /// Ensures that the error response and status code match the expected error.
+        /// </summary>
+        /// <param name="op">The operation being validated.</param>
+        /// <param name="ex">The exception thrown.</param>
+        /// <param name="expectedError">The expected HTTP status code.</param>
         public void EnsureError(string op, CdpException ex, HttpStatusCode expectedError)
         {
             var uri = ex.Request.RequestUri.ToString();
@@ -904,8 +955,11 @@ namespace CdpValidator
             }
         }
 
-        // URL = /datasets
-        // Returns only valid datasets
+        /// <summary>
+        /// Gets the valid datasets for the connection.
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A read-only collection of valid <see cref="CdpDataSource"/> objects.</returns>
         public async Task<IReadOnlyCollection<CdpDataSource>> GetDataSets(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -999,13 +1053,14 @@ namespace CdpValidator
             return validObjects;
         }
 
+        // Type or member is obsolete (preview)
+#pragma warning disable CS0618
+
         private void ValidateRows(CdpTable currenttable, IEnumerable<DValue<RecordValue>> items, ValidationDelegationParameters delegParams, string message, List<ValidationError> tableErrors)
         {
-#pragma warning disable CS0618 // Type or member is obsolete (preview)
             FxFilterExpression ffe = delegParams.FxFilter;
             IList<OrderExpression> ob = delegParams.OrderBy;
             FormulaValue previousValue = null;
-
             int count = 0;
             foreach (DValue<RecordValue> item in items)
             {
@@ -1048,7 +1103,7 @@ namespace CdpValidator
 
                 if (ob != null)
                 {
-                    // We only check with first 'order by' attribute and assume it's ascending only
+                    /* Check with first 'order by' attribute and assume it's ascending only */
                     string fieldName = ob.First().AttributeName;
                     FormulaValue currentValue = item.Value.GetField(fieldName);
 
@@ -1105,7 +1160,7 @@ namespace CdpValidator
                             bool previous = ((BooleanValue)previousValue).Value;
                             bool current = bv.Value;
 
-                            // false is considered to be lower than true
+                            /* false is considered to be lower than true */
                             if (previous && !current)
                             {
                                 tableErrors.AddError(UriPathAndQuery, message, $"Item[{count}] - Attribute {fieldName} value '{previous}' is not ordered properly ('{current}' is lower)");
@@ -1120,8 +1175,10 @@ namespace CdpValidator
                     previousValue = currentValue;
                 }
             }
-#pragma warning restore CS0618 // Type or member is obsolete
         }
+
+        /* End obsolete code region */
+#pragma warning restore CS0618
 
         internal static Regex _regexLogicalName = new Regex(@"^[a-zA-Z0-9_\-\\\/\.\:\[\]\{\}]{2,72}$", RegexOptions.Compiled);
 
@@ -1191,11 +1248,29 @@ namespace CdpValidator
             Console.ResetColor();
         }
 
-        internal class Context()
+        /// <summary>
+        /// Context for table validation, including current table, errors, and cancellation token.
+        /// </summary>
+        internal class Context
         {
+            /// <summary>
+            /// The current table being validated.
+            /// </summary>
             public CdpTable Currenttable;
+
+            /// <summary>
+            /// The list of validation errors for the table.
+            /// </summary>
             public List<ValidationError> TableErrors;
+
+            /// <summary>
+            /// The table value being validated.
+            /// </summary>
             public CdpTableValue TableValue;
+
+            /// <summary>
+            /// The cancellation token for the operation.
+            /// </summary>
             public CancellationToken CancellationToken;
         }
     }
