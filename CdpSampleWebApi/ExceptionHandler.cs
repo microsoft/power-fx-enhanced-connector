@@ -7,10 +7,19 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CdpSampleWebApi
 {
-    // Run on unhandled exception during a request.
-    // https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters?view=aspnetcore-9.0#exception-filters
+    /// <summary>
+    /// Exception filter that handles unhandled exceptions during a request and returns a standard error response.
+    /// </summary>
+    /// <remarks>
+    /// See: https://learn.microsoft.com/aspnet/core/mvc/controllers/filters#exception-filters .
+    /// </remarks>
     public class ExceptionHandler : IExceptionFilter
     {
+        /// <summary>
+        /// Called when an exception occurs during request processing.
+        /// Sets the result to a JSON error response with status code 500.
+        /// </summary>
+        /// <param name="context">The exception context.</param>
         public void OnException(ExceptionContext context)
         {
             var ex = context.Exception;
@@ -32,14 +41,24 @@ namespace CdpSampleWebApi
         }
     }
 
-    // Standard object to return on errors (mostly unhandled exceptions).
-    // $$$ Sync with CDP spec for error protocol?
+    /// <summary>
+    /// Standard object to return on errors (mostly unhandled exceptions).
+    /// </summary>
     public class ErrorPoco
     {
+        /// <summary>
+        /// Gets or sets the error message.
+        /// </summary>
         public string Message { get; set; }
 
+        /// <summary>
+        /// Gets or sets the request URI where the error occurred.
+        /// </summary>
         public string RequestUri { get; set; }
 
+        /// <summary>
+        /// Gets or sets the detailed error information.
+        /// </summary>
         public string Details { get; set; }
     }
 }
