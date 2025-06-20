@@ -17,10 +17,19 @@ namespace CdpHelpers
     /// </summary>
     internal class MockTableDelegationInfo : TableDelegationInfo
     {
+        /// <summary>
+        /// Gets a value indicating whether the table is delegable.
+        /// </summary>
         public override bool IsDelegable => true;
 
+        /// <summary>
+        /// Common set of supported delegation operators for this mock implementation.
+        /// </summary>
         private static readonly IReadOnlyList<DelegationOperator> _commonSupportedDelegation = new List<DelegationOperator> { DelegationOperator.Eq, DelegationOperator.Ne, DelegationOperator.Lt, DelegationOperator.Le, DelegationOperator.Gt, DelegationOperator.Ge, DelegationOperator.And, DelegationOperator.Or, DelegationOperator.Top };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockTableDelegationInfo"/> class.
+        /// </summary>
         public MockTableDelegationInfo()
         {
             FilterSupportedFunctions = _commonSupportedDelegation;
@@ -34,6 +43,11 @@ namespace CdpHelpers
             };
         }
 
+        /// <summary>
+        /// Gets the column capability definition for a given field name.
+        /// </summary>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <returns>A <see cref="ColumnCapabilitiesDefinition"/> with supported filter functions.</returns>
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
         {
             return new ColumnCapabilitiesDefinition()

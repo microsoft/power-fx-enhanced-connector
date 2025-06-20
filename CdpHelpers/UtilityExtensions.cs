@@ -8,10 +8,16 @@ using Microsoft.PowerFx.Core.Functions.Delegation;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    // extension methods for CapabilitiesPoco
+    /// <summary>
+    /// Extension methods for CapabilitiesPoco and related types.
+    /// </summary>
     internal static class UtilityExtensions
     {
-        // C:\dev\power-fx\src\libraries\Microsoft.PowerFx.Connectors\Tabular\Capabilities\ServiceCapabilities.cs
+        /// <summary>
+        /// Converts a list of filter function names to a list of <see cref="DelegationOperator"/> values.
+        /// </summary>
+        /// <param name="filterFunctionList">The list of filter function names.</param>
+        /// <returns>A list of <see cref="DelegationOperator"/> values, or null if input is null.</returns>
         public static IEnumerable<DelegationOperator> ToOp(IEnumerable<string> filterFunctionList)
         {
             if (filterFunctionList == null)
@@ -32,6 +38,11 @@ namespace Microsoft.PowerFx.Connectors
             return list;
         }
 
+        /// <summary>
+        /// Converts a list of <see cref="DelegationOperator"/> values to their lowercase string representations.
+        /// </summary>
+        /// <param name="ops">The list of operators.</param>
+        /// <returns>A list of lowercase string representations, or null if input is null.</returns>
         public static IEnumerable<string> ToStr(this IEnumerable<DelegationOperator> ops)
         {
             if (ops == null)
@@ -42,7 +53,11 @@ namespace Microsoft.PowerFx.Connectors
             return ops.Select(op => op.ToString().ToLowerInvariant());
         }
 
-        // Convert from Dict<string,object> --> Dict<string,string>
+        /// <summary>
+        /// Converts a dictionary of string/object pairs to a dictionary of string/string pairs.
+        /// </summary>
+        /// <param name="dict">The input dictionary.</param>
+        /// <returns>A dictionary with string keys and string values.</returns>
         internal static IDictionary<string, string> ToStrDict(this IReadOnlyDictionary<string, object> dict)
         {
             IDictionary<string, string> options = new Dictionary<string, string>();

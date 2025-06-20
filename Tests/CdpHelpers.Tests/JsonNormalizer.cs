@@ -13,20 +13,40 @@ namespace Microsoft.PowerFx.Tests
     // From: https://github.com/microsoft/PowerApps-Language-Tooling/blob/master/src/PAModel/Utility/JsonNormalizer.cs
     // Write out Json in a normalized sorted order. 
     // Orders properties, whitespace/indenting, etc. 
+
+    /// <summary>
+    /// Provides utilities for serializing and normalizing JSON in a consistent, sorted, and indented format.
+    /// </summary>
     public class JsonNormalizer
     {
+        /// <summary>
+        /// Serializes an object to JSON and normalizes the output for consistent formatting and property ordering.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to serialize.</typeparam>
+        /// <param name="obj">The object to serialize.</param>
+        /// <returns>A normalized JSON string.</returns>
         public static string Serialize<T>(T obj)
         {
             var json = JsonSerializer.Serialize(obj);
             return Normalize(json);
         }
 
+        /// <summary>
+        /// Normalizes a JSON string for consistent formatting and property ordering.
+        /// </summary>
+        /// <param name="jsonStr">The JSON string to normalize.</param>
+        /// <returns>A normalized JSON string.</returns>
         public static string Normalize(string jsonStr)
         {
             var je = JsonDocument.Parse(jsonStr).RootElement;
             return Normalize(je);
         }
 
+        /// <summary>
+        /// Normalizes a <see cref="JsonElement"/> for consistent formatting and property ordering.
+        /// </summary>
+        /// <param name="je">The <see cref="JsonElement"/> to normalize.</param>
+        /// <returns>A normalized JSON string.</returns>
         public static string Normalize(JsonElement je)
         {
             var ms = new MemoryStream();
@@ -45,6 +65,11 @@ namespace Microsoft.PowerFx.Tests
             return str;
         }
 
+        /// <summary>
+        /// Writes a <see cref="JsonElement"/> to a <see cref="Utf8JsonWriter"/> in a normalized, sorted order.
+        /// </summary>
+        /// <param name="je">The <see cref="JsonElement"/> to write.</param>
+        /// <param name="writer">The <see cref="Utf8JsonWriter"/> to write to.</param>
         private static void Write(JsonElement je, Utf8JsonWriter writer)
         {
             switch (je.ValueKind)

@@ -12,12 +12,57 @@ using Microsoft.PowerFx.Dataverse.Eval.Delegation.QueryExpression;
 namespace Microsoft.PowerFx.Connectors
 {
     /// <summary>
-    /// Convert from OData <see cref="QueryNode"/> tree to a Power Fx delegation tree.
+    /// Provides functionality to convert OData <see cref="QueryNode"/> trees to Power Fx delegation trees
+    /// for use with Microsoft Dataverse. This static utility class handles the translation between 
+    /// OData query syntax and Power Fx filter expressions, enabling delegation of queries to Dataverse.
     /// </summary>
+    /// <remarks>
+    /// This converter supports a subset of OData operations that can be efficiently delegated to Dataverse:
+    /// <list type="bullet">
+    /// <item><description>Binary logical operators (And, Or)</description></item>
+    /// <item><description>Comparison operators (Equal, NotEqual, GreaterThan, LessThan, etc.)</description></item>
+    /// <item><description>Null value checks</description></item>
+    /// <item><description>String functions like 'contains'</description></item>
+    /// </list>
+    /// 
+    /// The conversion process maintains the semantic meaning of OData queries while producing 
+    /// Power Fx expressions that can be efficiently executed against Dataverse.
+    /// </remarks>
+    /// <seealso cref="QueryNode"/>
+    /// <seealso cref="FxFilterExpression"/>    /// <seealso cref="Microsoft.PowerFx.Dataverse.Eval.Delegation.QueryExpression"/>
     public static class OData2XrmConverter
     {
-        // Convert an OData filter to a Dataverse filter.
-        // Alternative would be to use their vistor, QueryNodeVisitor<T>.
+        /// <summary>
+        /// Converts an OData <see cref="SingleValueNode"/> filter to a Power Fx <see cref="FxFilterExpression"/> 
+        /// that can be used for Dataverse delegation.
+        /// </summary>
+        /// <param name="node">The OData single value node to convert. Must not be null. Supports binary operators (And, Or, comparisons), 
+        /// property access nodes, constant nodes, and function calls like 'contains'.</param>
+        /// <returns>A <see cref="FxFilterExpression"/> representing the converted filter expression that can be 
+        /// used for Power Fx delegation to Dataverse.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when an unsupported null operation is encountered.</exception>
+        /// <exception cref="NotImplementedException">Thrown when the node type or operation is not yet supported 
+        /// by the converter.</exception>
+        /// <example>
+        /// <code>
+        /// // Convert an OData filter like "Name eq 'John' and Age gt 25"
+        /// // The resulting FxFilterExpression can be used for Dataverse delegation
+        /// var filterExpression = OData2XrmConverter.Parse(odataNode);
+        /// </code>
+        /// </example>
+        /// <remarks>
+        /// This method recursively parses OData query nodes and converts them to Power Fx filter expressions.
+        /// Supported operations include:
+        /// - Logical operators: And, Or
+        /// - Comparison operators: Equal, NotEqual, GreaterThan, LessThan, GreaterThanOrEqual, LessThanOrEqual
+        /// - Null checks: field eq null, field ne null
+        /// - Function calls: contains(field, value)
+        /// - Property access with constant values
+        /// 
+        /// Alternative implementation could use OData's QueryNodeVisitor&lt;T&gt; pattern.
+        /// </remarks>
+        /// <seealso cref="ParseLogical(BinaryOperatorNode, FxFilterOperator)"/>
+        /// <seealso cref="Convert(BinaryOperatorKind)"/>
         public static FxFilterExpression Parse(SingleValueNode node)
         {
             if (node is BinaryOperatorNode bin)
@@ -105,12 +150,21 @@ namespace Microsoft.PowerFx.Connectors
             throw new NotImplementedException($"Unhandled node:  {node.GetType().FullName}");
         }
 
+        /// <summary>
+        /// Converts an OData <see cref="BinaryOperatorKind"/> to the corresponding Power Fx <see cref="FxConditionOperator"/>.
+        /// </summary>
+        /// <param name="op">The OData binary operator to convert.</param>
+        /// <returns>The equivalent <see cref="FxConditionOperator"/> for use in Power Fx filter expressions.</returns>
+        /// <exception cref="NotImplementedException">Thrown when the specified <paramref name="op"/> is not supported for conversion.</exception>
+        /// <remarks>
+        /// This method provides a mapping between OData comparison operators and their Power Fx equivalents.
+        /// Only comparison operators are supported; logical operators (And, Or) are handled separately in the main Parse method.
+        /// </remarks>
         private static FxConditionOperator Convert(BinaryOperatorKind op)
         {
             switch (op)
             {
-                case BinaryOperatorKind.GreaterThan: return FxConditionOperator.GreaterThan;
-                case BinaryOperatorKind.LessThan: return FxConditionOperator.LessThan;
+                case BinaryOperatorKind.GreaterThan: return FxConditionOperator.GreaterThan;                case BinaryOperatorKind.LessThan: return FxConditionOperator.LessThan;
                 case BinaryOperatorKind.Equal: return FxConditionOperator.Equal;
                 case BinaryOperatorKind.GreaterThanOrEqual: return FxConditionOperator.GreaterEqual;
                 case BinaryOperatorKind.LessThanOrEqual: return FxConditionOperator.LessEqual;
@@ -120,7 +174,18 @@ namespace Microsoft.PowerFx.Connectors
             throw new NotImplementedException($"Can't convert {op}");
         }
 
-        // Parse a binary operation that is And/OR
+        /// <summary>
+        /// Parses a binary logical operation (And/Or) from an OData <see cref="BinaryOperatorNode"/> 
+        /// and converts it to a Power Fx <see cref="FxFilterExpression"/>.
+        /// </summary>
+        /// <param name="bin">The binary operator node containing the left and right operands to be parsed.</param>
+        /// <param name="op">The logical operator (And or Or) to apply between the parsed operands.</param>
+        /// <returns>A <see cref="FxFilterExpression"/> containing the logical operation with both operands as child filters.</returns>
+        /// <remarks>
+        /// This method recursively calls the main <see cref="Parse(SingleValueNode)"/> method to convert 
+        /// the left and right operands, then combines them using the specified logical operator.
+        /// The resulting filter expression will have the two parsed operands as child filters.
+        /// </remarks>
         private static FxFilterExpression ParseLogical(BinaryOperatorNode bin, FxFilterOperator op)
         {
             var f1 = Parse(bin.Left);

@@ -15,8 +15,17 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace CdpHelpers
 {
+    /// <summary>
+    /// Executes in-memory delegation logic for Dataverse queries, applying filter, order, top, and projection operations.
+    /// </summary>
     internal class InMemoryDelegationExecutor
     {
+        /// <summary>
+        /// Executes the in-memory query operations on the provided table using the specified parameters.
+        /// </summary>
+        /// <param name="sourceTable">The source table to query.</param>
+        /// <param name="parameters">Delegation parameters including filter, order, top, and projection info.</param>
+        /// <returns>An enumerable of <see cref="RecordValue"/> representing the query result.</returns>
         public static IEnumerable<RecordValue> Execute(
         TableValue sourceTable,
         DataverseDelegationParameters parameters)
@@ -64,6 +73,12 @@ namespace CdpHelpers
             return rows;
         }
 
+        /// <summary>
+        /// Evaluates a filter expression against a record.
+        /// </summary>
+        /// <param name="filter">The filter expression to evaluate.</param>
+        /// <param name="record">The record to test.</param>
+        /// <returns>True if the record matches the filter; otherwise, false.</returns>
         private static bool EvaluateFilter(FxFilterExpression filter, RecordValue record)
         {
             // Combine sub‐filters:
@@ -94,6 +109,12 @@ namespace CdpHelpers
             return true;
         }
 
+        /// <summary>
+        /// Evaluates a single condition expression against a record.
+        /// </summary>
+        /// <param name="cond">The condition expression.</param>
+        /// <param name="record">The record to test.</param>
+        /// <returns>True if the record matches the condition; otherwise, false.</returns>
         private static bool EvaluateCondition(FxConditionExpression cond, RecordValue record)
         {
             // 1) Pull raw value from the record
@@ -195,8 +216,11 @@ namespace CdpHelpers
         }
 
         /// <summary>
-        /// Applies multi-column ordering to a sequence of RecordValue.
+        /// Applies multi-column ordering to a sequence of <see cref="RecordValue"/>.
         /// </summary>
+        /// <param name="rows">The rows to order.</param>
+        /// <param name="orderBy">The list of order expressions.</param>
+        /// <returns>An ordered enumerable of <see cref="RecordValue"/>.</returns>
         private static IEnumerable<RecordValue> ApplyOrdering(
             IEnumerable<RecordValue> rows,
             IList<OrderExpression> orderBy)
@@ -235,8 +259,11 @@ namespace CdpHelpers
         }
 
         /// <summary>
-        /// Extracts a comparable CLR value from a RecordValue field.
+        /// Extracts a comparable CLR value from a <see cref="RecordValue"/> field.
         /// </summary>
+        /// <param name="record">The record containing the field.</param>
+        /// <param name="fieldName">The name of the field to extract.</param>
+        /// <returns>A comparable value for ordering, or null if not applicable.</returns>
         private static IComparable GetComparableField(RecordValue record, string fieldName)
         {
             var value = record.GetField(fieldName);
@@ -255,6 +282,12 @@ namespace CdpHelpers
             };
         }
 
+        /// <summary>
+        /// Projects a record to a new record containing only the specified columns.
+        /// </summary>
+        /// <param name="row">The source record.</param>
+        /// <param name="columnMap">The columns to include in the projection.</param>
+        /// <returns>A new <see cref="RecordValue"/> with only the selected columns.</returns>
         private static RecordValue ProjectColumns(
             RecordValue row,
             IEnumerable<FxColumnInfo> columnMap)
