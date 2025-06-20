@@ -17,9 +17,16 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Extension methods for <see cref="RecordType"/> to support OData and Power Fx integration scenarios.
+    /// </summary>
     public static class RecordTypeExtensions
     {
-        // Convert a Power Fx record into a EdmModel and type.
+        /// <summary>
+        /// Converts a Power Fx <see cref="RecordType"/> into an <see cref="EdmModel"/> and <see cref="IEdmType"/>.
+        /// </summary>
+        /// <param name="record">The record type to convert.</param>
+        /// <returns>A tuple containing the EDM model and type.</returns>
         public static (EdmModel, IEdmType) GetModel(this RecordType record)
         {
             EdmModel model = new EdmModel();
@@ -63,6 +70,11 @@ namespace Microsoft.PowerFx.Connectors
             return (model, t1);
         }
 
+        /// <summary>
+        /// Converts a <see cref="RecordType"/> to a <see cref="TableSchemaPoco"/> for describing table schema and capabilities.
+        /// </summary>
+        /// <param name="record">The record type to convert.</param>
+        /// <returns>A <see cref="TableSchemaPoco"/> representing the schema.</returns>
         // $$$ Can we build this ontop of GetModel()?
         // delegationInfo needed since each column has delegation info.
         public static TableSchemaPoco ToTableSchemaPoco(this RecordType record)
@@ -132,6 +144,12 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
+        /// <summary>
+        /// Converts a <see cref="RecordType"/> to a <see cref="GetTableResponse"/> for describing table metadata and capabilities.
+        /// </summary>
+        /// <param name="record">The record type to convert.</param>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>A <see cref="GetTableResponse"/> representing the table.</returns>
         public static GetTableResponse ToTableResponse(this RecordType record, string tableName)
         {
             // if you have record type, this could come from record.TryGetCapabilities(out var delegationInfo);
@@ -175,7 +193,13 @@ namespace Microsoft.PowerFx.Connectors
             return resp;
         }
 
-        // Convert OData query into a PowerFx delegation query object.
+        /// <summary>
+        /// Converts an OData query dictionary into a Power Fx <see cref="DelegationParameters"/> object.
+        /// </summary>
+        /// <param name="record">The record type used to build the model.</param>
+        /// <param name="query">The OData query parameters.</param>
+        /// <returns>A <see cref="DelegationParameters"/> representing the parsed query.</returns>
+
         public static DelegationParameters Convert(
             this RecordType record, // used to build model
             IDictionary<string, string> query)
