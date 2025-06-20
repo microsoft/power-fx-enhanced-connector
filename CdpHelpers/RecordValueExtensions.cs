@@ -8,8 +8,17 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Extension methods for <see cref="RecordValue"/> to support OData value extraction.
+    /// </summary>
     public static class RecordValueExtensions
     {
+        /// <summary>
+        /// Extracts a dictionary of OData-compatible primitive values from a <see cref="RecordValue"/>.
+        /// Only string, number, and decimal fields are included. Relationships and unsupported types are skipped.
+        /// </summary>
+        /// <param name="value">The <see cref="RecordValue"/> to extract values from.</param>
+        /// <returns>A dictionary mapping field names to their primitive values.</returns>
         public static Dictionary<string, object> GetODataValues(this RecordValue value)
         {
             var v1 = new Dictionary<string, object>();
