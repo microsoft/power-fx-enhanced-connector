@@ -7,8 +7,14 @@ using Microsoft.PowerFx.Types;
 
 namespace CdpHelpers.Tests
 {
+    /// <summary>
+    /// Unit tests for RecordType extension methods related to OData delegation parameters.
+    /// </summary>
     public class RecordTypeExtensionTests
     {
+        /// <summary>
+        /// Tests conversion of OData parameters to delegation parameters and verifies Top, Select, and Filter extraction.
+        /// </summary>
         [Fact]
         public void Test1()
         {
