@@ -3,10 +3,20 @@
 
 namespace CdpSampleWebApi
 {
+    /// <summary>
+    /// Entry point for the CdpSampleWebApi application.
+    /// </summary>
     public partial class Program
     {
+        /// <summary>
+        /// Gets the UTC time when the application started.
+        /// </summary>
         public static DateTime StartupTime { get; private set; }
 
+        /// <summary>
+        /// Main entry point for the application. Configures and runs the web host.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         public static void Main(string[] args)
         {
             Program.StartupTime = DateTime.UtcNow;
