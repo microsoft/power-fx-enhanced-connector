@@ -11,8 +11,15 @@ using Microsoft.PowerFx.Connectors;
 
 namespace CdpValidator
 {
+    /// <summary>
+    /// Entry point for the CDP Validator application.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Main entry point. Parses arguments, sets up the program, and runs validation.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         public static void Main(string[] args)
         {            
             Args arguments = Args.Parse(args);
@@ -51,11 +58,19 @@ namespace CdpValidator
 
         private readonly Args _args;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Program"/> class.
+        /// </summary>
+        /// <param name="args">Parsed command-line arguments.</param>
         public Program(Args args)
         {
             _args = args;            
         }
 
+        /// <summary>
+        /// Runs the validation worker asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token.</param>
         public async Task WorkAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();                                               
@@ -63,10 +78,20 @@ namespace CdpValidator
         }
     }
 
+    /// <summary>
+    /// Logger implementation that writes connector logs to the console.
+    /// </summary>
     internal class ConsoleLogger : ConnectorLogger
     {
+        /// <summary>
+        /// Gets the singleton instance of the <see cref="ConsoleLogger"/>.
+        /// </summary>
         public static readonly ConnectorLogger Instance = new ConsoleLogger();
 
+        /// <summary>
+        /// Logs a connector log entry to the console.
+        /// </summary>
+        /// <param name="log">The connector log entry.</param>
         protected override void Log(ConnectorLog log)
         {
             // Console.Write(log.Message);
