@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using CdpHelpers;
+using CdpHelpers.Protocol;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.PowerFx.Core.Entities;
@@ -65,7 +66,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // $$$ Can we build this ontop of GetModel()?
         // delegationInfo needed since each column has delegation info.
-        public static TableSchemaPoco ToTableSchemaPoco(this RecordType record)
+        public static TableSchemaPoco ToTableSchemaPoco(this RecordType record, TableMetadataSetting tableMetadataSetting)
         {
             var fields = record.GetFieldTypes();
 
@@ -114,12 +115,21 @@ namespace Microsoft.PowerFx.Connectors
                     sort = "none";
                 }
 
+                CDPSensitivityLabelInfoCopy sensitivityLabelInfo = null;
+                if (tableMetadataSetting?.ExtractSensitivityLabel == true)
+                {
+                    sensitivityLabelInfo = UtilityExtensions.GetMockSensitivityLabelInfo();
+                }
+
                 props[name] = new TableSchemaPoco.ColumnInfo
                 {
                     title = displayName,
                     type = typeStr,
                     capabilities = capPoco,
-                    sort = sort
+                    sort = sort,
+                    sensitivityLabels = sensitivityLabelInfo != null ?
+                        new List<CDPSensitivityLabelInfoCopy> { sensitivityLabelInfo } :
+                        null,
                 };
             }
 
@@ -132,7 +142,7 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static GetTableResponse ToTableResponse(this RecordType record, string tableName)
+        public static GetTableResponse ToTableResponse(this RecordType record, string tableName, TableMetadataSetting metadataSetting = null)
         {
             // if you have record type, this could come from record.TryGetCapabilities(out var delegationInfo);
             // this can be different for different table or datasource.
@@ -142,7 +152,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 name = tableName,
                 permissions = "read-write",
-                schema = record.ToTableSchemaPoco()
+                schema = record.ToTableSchemaPoco(metadataSetting)
             };
 
             if (delegationInfo != null && delegationInfo.IsDelegable)

@@ -122,7 +122,7 @@
         "deprecated": false,
         "x-ms-visibility": "internal"
       }
-    }, 
+    },
     "/datasets/{datasets}/tables/{tableName}/items": {
       "get": {
         "tags": [
@@ -226,7 +226,7 @@
         "deprecated": false,
         "x-ms-visibility": "internal"
       }
-    },    
+    },
     "/datasets/{dataset}/tables": {
       "get": {
         "tags": [
@@ -270,7 +270,7 @@
           "nextLinkName": "@odata.nextLink"
         }
       }
-    }    
+    }
   },
   "definitions": {
     "BlobDataSetsMetadata": {

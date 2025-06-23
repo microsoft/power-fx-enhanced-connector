@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using CdpHelpers.Protocol;
 
 #pragma warning disable SA1300, IDE1006 // Elements should begin with an upper case
 #pragma warning disable CA1708 // Identifiers should differ by more than case
@@ -42,6 +43,9 @@ namespace Microsoft.PowerFx.Connectors
             // What filter capabilities?
             [JsonPropertyName("x-ms-capabilities")]
             public ColumnCapabilitiesPoco capabilities { get; set; }
+
+            [JsonPropertyName("x-ms-content-sensitivityLabelInfo")]
+            public IEnumerable<CDPSensitivityLabelInfoCopy> sensitivityLabels { get; set; }
         }
     }
 }

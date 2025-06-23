@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Text.Json;
+using CdpHelpers.Protocol;
 using CdpSampleWebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.PowerFx.Connectors;
@@ -71,12 +72,15 @@ namespace CdpSampleWebApi.Controllers
         public async Task<GetTableResponse> GetTableInfo(
             string dataset,
             string tableName,
-            [FromQuery(Name = "api-version")] string apiVersion)
+            [FromQuery(Name = "api-version")] string apiVersion,
+            [FromQuery(Name = "extractSensitivityLabel")] bool extractSensitivityLabel = false,
+            [FromQuery(Name = "purviewAccountName")] string purviewAccountName = null)
         {
             var provider = GetProvider();
+            var metadataSetting = new TableMetadataSetting(extractSensitivityLabel, purviewAccountName);
             RecordType record = await provider.GetTableAsync(dataset, tableName, CancellationToken.None).ConfigureAwait(true);
 
-            GetTableResponse resp = record.ToTableResponse(tableName);
+            GetTableResponse resp = record.ToTableResponse(tableName, metadataSetting);
 
             return resp;
         }
