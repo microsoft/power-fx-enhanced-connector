@@ -11,7 +11,7 @@
       "CdpSample"
     ]
   },
-  "host": "testcdpconnector-cxg7debrffd5adar.eastus-01.azurewebsites.net",
+  "host": "testcdpconnector-sample5adar.eastus-01.azurewebsites.net",
   "basePath": "/",
   "schemes": [
     "https"
