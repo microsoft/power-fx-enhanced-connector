@@ -49,7 +49,7 @@ namespace CdpHelpers
             }
 
             // 5) Apply $select (projection)
-            if (parameters.ColumnMap != null)
+            if (parameters.ColumnMap != null && parameters.ColumnMap.Any())
             {
                 rows = rows
                     .Select(r => ProjectColumns(r, parameters.ColumnMap))

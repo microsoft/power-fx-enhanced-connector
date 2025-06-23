@@ -8,10 +8,10 @@
 
 	<PropertyGroup>
 	
-		<PowerFxDataverseVersion>1.3.2</PowerFxDataverseVersion>
+		<PowerFxDataverseVersion>1.99.0-local</PowerFxDataverseVersion>
 
 		<!-- And then set this to it's Microsoft.PowerFx.Core dependency -->
-		<PowerFxVersion>1.3.1</PowerFxVersion>
+		<PowerFxVersion>1.99.0-local</PowerFxVersion>
 
 		<!-- This is version Dataverse uses -->
 		<ODataVersion>[7.20.0]</ODataVersion>

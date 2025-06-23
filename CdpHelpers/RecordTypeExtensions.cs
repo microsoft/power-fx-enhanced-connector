@@ -170,6 +170,14 @@ namespace Microsoft.PowerFx.Connectors
                         nonFilterableProperties = delegationInfo.FilterRestriction.NonFilterableProperties.ToArray()
                     };
                 }
+
+                if (delegationInfo.CountCapabilities?.IsCountableTable() == true)
+                {
+                    c.countRestrictions = new CapabilitiesPoco.Count
+                    {
+                        countable = true
+                    };
+                }
             }
 
             return resp;
@@ -213,10 +221,22 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             FxColumnMap columnMap = null;
+            if (query.TryGetValue("$count", out var countStr) && bool.TryParse(countStr, out var count) && count)
+            {
+                columnMap = new FxColumnMap(record.ToTable(), count);
+            }
+            else
+            {
+                columnMap = new FxColumnMap(record.ToTable(), false);
+            }
+
             if (query.TryGetValue("$select", out var selectStr))
             {
                 var select = selectStr.Split(',');
-                columnMap = FxColumnMap.New(select);
+                foreach (var field in select)
+                {
+                    columnMap.AddColumn(field);
+                }
             }
 
             // $$$ change for Count, Summarize?

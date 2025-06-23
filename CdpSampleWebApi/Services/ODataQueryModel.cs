@@ -24,6 +24,9 @@ namespace CdpSampleWebApi.Services
         [FromQuery(Name = "$top")]
         public int top { get; set; }
 
+        [FromQuery(Name = "$count")]
+        public bool Count { get; set; }
+
         // field
         // field desc
         [FromQuery(Name = "$orderby")]
@@ -39,6 +42,8 @@ namespace CdpSampleWebApi.Services
             {
                 Add(d, "$top", this.top.ToString(CultureInfo.InvariantCulture));
             }
+
+            Add(d, "$count", this.Count.ToString(CultureInfo.InvariantCulture));
 
             return d;
         }

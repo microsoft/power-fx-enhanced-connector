@@ -49,6 +49,11 @@ namespace Microsoft.PowerFx.Connectors
                 resp.value.Add(dict);
             }
 
+            if (parameters.ReturnTotalCount() && tableValue is not IDelegatableTableValue)
+            {
+                resp.ODataCount = results.Count();
+            }
+
             return resp;
         }
     }

@@ -32,6 +32,9 @@ namespace CdpHelpers
             {
                 UnsortableProperties = new List<string> { }
             };
+#pragma warning disable CS0618 // Type or member is obsolete
+            CountCapabilities = new MockCountCapabilities();
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
@@ -40,6 +43,25 @@ namespace CdpHelpers
             {
                 FilterFunctions = _commonSupportedDelegation
             };
+        }
+
+        [Obsolete]
+        private class MockCountCapabilities
+            : CountCapabilities
+        {
+            public MockCountCapabilities()
+            {
+            }
+
+            public override bool IsCountableAfterFilter()
+            {
+                return true;
+            }
+
+            public override bool IsCountableTable()
+            {
+                return true;
+            }
         }
     }
 }

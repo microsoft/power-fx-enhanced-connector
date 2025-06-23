@@ -20,6 +20,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public Filter filterRestrictions { get; set; }
 
+        public Count countRestrictions { get; set; }
+
         public bool isOnlyServerPagable { get; set; }
 
         // "top", "skiptoken"
@@ -53,6 +55,11 @@ namespace Microsoft.PowerFx.Connectors
             public bool sortable { get; set; }
 
             public string[] unsortableProperties { get; set; }
+        }
+
+        public class Count
+        {
+            public bool countable { get; set; }
         }
     }
 }
