@@ -13,18 +13,34 @@ using static CdpValidator.Extensions;
 
 namespace CdpValidator
 {
-    // -auth <filename>  // used to resolve an HttpClient with auth
-    // -log <dir>       // write all log files to the directory
-    // -mode: stress    //
+    /*     
+     -auth <filename>  // used to resolve an HttpClient with auth
+     -log <dir>       // write all log files to the directory
+     -mode: stress    //
 
-    // -repl         // Run Power Fx repl. For interactive debugging
-    [SuppressMessage("Design", "CA1001: Types that own disposable fields should be disposable", Justification = "Managed internally")]    
+     -repl         // Run Power Fx repl. For interactive debugging
+    */
+
+    [SuppressMessage("Design", "CA1001: Types that own disposable fields should be disposable", Justification = "Managed internally")]
+
+    /// <summary>
+    /// Represents command-line arguments and configuration for the CDP Validator tool.
+    /// </summary>
     public class Args
     {
+        /// <summary>
+        /// Gets or sets the path to the authentication file containing connection parameters.
+        /// </summary>
         public string AuthPath { get; set; }
 
+        /// <summary>
+        /// Gets or sets the run mode for the validator (e.g., RunStress or Repl).
+        /// </summary>
         public RunMode Mode { get; set; }
 
+        /// <summary>
+        /// Gets or sets the directory where log files will be written.
+        /// </summary>
         public string LogDir { get; set; }
 
         private HttpClient _httpClient;
@@ -33,6 +49,9 @@ namespace CdpValidator
         private string _urlPrefix;
         internal LoggingHttpMessageHandler _httpHandler;
 
+        /// <summary>
+        /// Gets the configured <see cref="HttpClient"/> instance for making HTTP requests.
+        /// </summary>
         public HttpClient HttpClient
         {
             get
@@ -42,6 +61,9 @@ namespace CdpValidator
             }
         }
 
+        /// <summary>
+        /// Gets the URL prefix, with connectionId replaced if present.
+        /// </summary>
         public string UrlPrefix
         {
             get
@@ -60,6 +82,9 @@ namespace CdpValidator
             }
         }
 
+        /// <summary>
+        /// Gets the internal connection parameters loaded from the authentication file.
+        /// </summary>
         public CdpInternalConnection Connection
         {
             get
@@ -169,6 +194,11 @@ namespace CdpValidator
             return new RequestResponseLogger(logDir, logUrisToConsole: true);
         }
 
+        /// <summary>
+        /// Parses command-line arguments into an <see cref="Args"/> instance.
+        /// </summary>
+        /// <param name="args">The command-line arguments.</param>
+        /// <returns>An <see cref="Args"/> instance with parsed values, or null if arguments are invalid.</returns>
         public static Args Parse(string[] args)
         {
             var result = new Args();
@@ -221,10 +251,19 @@ namespace CdpValidator
         }
     }
 
+    /// <summary>
+    /// Specifies the run mode for the CDP Validator tool.
+    /// </summary>
     public enum RunMode
     {
+        /// <summary>
+        /// Run the validator in stress mode for validation.
+        /// </summary>
         RunStress,
 
+        /// <summary>
+        /// Run the validator in interactive REPL mode.
+        /// </summary>
         Repl,
     }
 }

@@ -12,9 +12,14 @@ using Microsoft.PowerFx.Types;
 
 namespace CdpHelpers.Tests
 {
+    /// <summary>
+    /// Unit tests for table delegation info and table response serialization.
+    /// </summary>
     public class DelegationInfoTests
     {
-        // Non-delegated example.
+        /// <summary>
+        /// Tests the ToTableResponse extension method for a non-delegated record type.
+        /// </summary>
         [Fact]
         public void TestToTableResponse()
         {
@@ -49,6 +54,9 @@ namespace CdpHelpers.Tests
 """, json);
         }
 
+        /// <summary>
+        /// Tests the ToTableResponse extension method for a record type with delegation info.
+        /// </summary>
         [Fact]
         public void TestWithDelegation()
         {
@@ -102,6 +110,9 @@ namespace CdpHelpers.Tests
         }
     }
 
+    /// <summary>
+    /// Test implementation of RecordType for unit testing delegation info.
+    /// </summary>
     public class TestRecordType : RecordType
     {
         private static DisplayNameProvider GetDNP()
@@ -131,19 +142,25 @@ namespace CdpHelpers.Tests
             return info;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestRecordType"/> class.
+        /// </summary>
         public TestRecordType()
             : base(GetDNP(), GetDelegationInfo())
         {
         }
 
+        /// <inheritdoc/>
         public override IEnumerable<string> FieldNames => _fieldTypes.Keys;
 
+        /// <inheritdoc/>
         public override bool TryGetFieldType(string name, out FormulaType type)
         {
             var found = _fieldTypes.TryGetValue(name, out type);
             return found;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object other)
         {
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
@@ -151,6 +168,7 @@ namespace CdpHelpers.Tests
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
@@ -159,10 +177,15 @@ namespace CdpHelpers.Tests
         }
     }
 
+    /// <summary>
+    /// Test implementation of TableDelegationInfo for unit testing column capabilities.
+    /// </summary>
     public class TestDelegationInfo : TableDelegationInfo
     {
+        /// <inheritdoc/>
         public override bool IsDelegable => true;
 
+        /// <inheritdoc/>
         public override ColumnCapabilitiesDefinition GetColumnCapability(string fieldName)
         {
             return new ColumnCapabilitiesDefinition

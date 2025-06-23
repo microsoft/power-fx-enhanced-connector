@@ -9,26 +9,39 @@ using Microsoft.AspNetCore.Mvc;
 namespace CdpSampleWebApi.Services
 {
     /// <summary>
-    /// Represent OData parameters in the query string.
-    /// This uses ASP.Net's [FromQuery] attribute for easy model binding.
-    /// This just collects the parameters from the URi, but does not do any parsing.
+    /// Represents OData parameters in the query string for model binding in ASP.NET.
+    /// Collects parameters from the URI but does not parse them.
     /// </summary>
     public class ODataQueryModel
     {
+        /// <summary>
+        /// Gets or sets the $select OData parameter.
+        /// </summary>
         [FromQuery(Name = "$select")]
         public string Select { get; set; }
 
+        /// <summary>
+        /// Gets or sets the $filter OData parameter.
+        /// </summary>
         [FromQuery(Name = "$filter")]
         public string Filter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the $top OData parameter.
+        /// </summary>
         [FromQuery(Name = "$top")]
         public int top { get; set; }
 
-        // field
-        // field desc
+        /// <summary>
+        /// Gets or sets the $orderby OData parameter.
+        /// </summary>
         [FromQuery(Name = "$orderby")]
         public string orderby { get; set; }
 
+        /// <summary>
+        /// Converts the OData query model to a dictionary of string key-value pairs.
+        /// </summary>
+        /// <returns>A dictionary containing the OData parameters as key-value pairs.</returns>
         public IDictionary<string, string> ToStrDict()
         {
             var d = new Dictionary<string, string>();
@@ -43,6 +56,12 @@ namespace CdpSampleWebApi.Services
             return d;
         }
 
+        /// <summary>
+        /// Adds a key-value pair to the dictionary if the value is not null.
+        /// </summary>
+        /// <param name="d">The dictionary to add to.</param>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
         private void Add(Dictionary<string, string> d, string key, string value)
         {
             if (value != null)

@@ -7,22 +7,34 @@ using Microsoft.PowerFx.Types;
 
 namespace CdpSampleWebApi
 {
+    /// <summary>
+    /// An in-memory table provider factory for testing, returns a <see cref="TrivialTableProvider"/>.
+    /// </summary>
     public class TrivialTableProviderFactory : ITableProviderFactory
     {
+        /// <summary>
+        /// Gets a trivial table provider instance.
+        /// </summary>
+        /// <param name="settings">Optional settings for the provider (not used).</param>
+        /// <returns>A <see cref="TrivialTableProvider"/> instance.</returns>
         public ITableProvider Get(IReadOnlyDictionary<string, string> settings)
         {
             return new TrivialTableProvider();
         }
     }
 
-    // An in-memory table for testing. 
-    // This doesn't require any external service connection. 
+    /// <summary>
+    /// An in-memory table provider for testing. This does not require any external service connection.
+    /// </summary>
     public class TrivialTableProvider : ITableProvider
     {
         private const string _tableName = "MyTable";
 
         private static Dictionary<string, TableValue> _tables = new Dictionary<string, TableValue>();
 
+        /// <summary>
+        /// Initializes static members of the <see cref="TrivialTableProvider"/> class.
+        /// </summary>
         static TrivialTableProvider()
         {
             TypeMarshallerCache cache = new TypeMarshallerCache();
@@ -83,6 +95,11 @@ namespace CdpSampleWebApi
             _tables[_tableName] = (TableValue)result;
         }
 
+        /// <summary>
+        /// Gets the available datasets.
+        /// </summary>
+        /// <param name="cancel">A cancellation token.</param>
+        /// <returns>An array of dataset items.</returns>
         public async Task<DatasetResponse.Item[]> GetDatasetsAsync(CancellationToken cancel = default)
         {
             return new DatasetResponse.Item[]
@@ -95,6 +112,13 @@ namespace CdpSampleWebApi
             };
         }
 
+        /// <summary>
+        /// Gets the record type for a given table.
+        /// </summary>
+        /// <param name="dataset">The dataset name.</param>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="cancel">A cancellation token.</param>
+        /// <returns>The record type for the table.</returns>
         public async Task<RecordType> GetTableAsync(string dataset, string tableName, CancellationToken cancel = default)
         {
             var type = _tables[tableName].Type;
@@ -102,6 +126,12 @@ namespace CdpSampleWebApi
             return type.ToRecord();
         }
 
+        /// <summary>
+        /// Gets the list of tables for a given dataset.
+        /// </summary>
+        /// <param name="dataset">The dataset name.</param>
+        /// <param name="cancel">A cancellation token.</param>
+        /// <returns>The tables response.</returns>
         public async Task<GetTablesResponse> GetTablesAsync(string dataset, CancellationToken cancel = default)
         {
             return new GetTablesResponse
@@ -117,6 +147,13 @@ namespace CdpSampleWebApi
             };
         }
 
+        /// <summary>
+        /// Gets the table value for a given table.
+        /// </summary>
+        /// <param name="dataset">The dataset name.</param>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="cancel">A cancellation token.</param>
+        /// <returns>The table value.</returns>
         public async Task<TableValue> GetTableValueAsync(string dataset, string tableName, CancellationToken cancel = default)
         {
             var value = _tables[tableName];
