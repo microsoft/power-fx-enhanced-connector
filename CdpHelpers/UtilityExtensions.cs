@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CdpHelpers.Protocol;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -66,6 +68,25 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return options;
+        }
+
+        internal static CDPSensitivityLabelInfoCopy GetMockSensitivityLabelInfo()
+        {
+            var result = new CDPSensitivityLabelInfoCopy
+            {
+                SensitivityLabelId = Guid.NewGuid().ToString(),
+                Name = "Microsoft All Employees",
+                DisplayName = "Confidential \\ Microsoft Extended",
+                Tooltip = null,
+                Priority = 5,
+                Color = "#FF8C00",
+                IsEncrypted = false,
+                IsEnabled = false,
+                IsParent = false,
+                ParentSensitivityLabelId = Guid.NewGuid().ToString(),
+            };
+
+            return result;
         }
     }
 }
