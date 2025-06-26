@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerPlatformArtifacts", "P
 		PowerPlatformArtifacts\settings.json = PowerPlatformArtifacts\settings.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplTest", "ReplTest\ReplTest.csproj", "{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCA7D531-F746-4566-B573-BF2AC36978C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
