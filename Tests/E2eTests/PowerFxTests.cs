@@ -20,7 +20,7 @@ namespace E2eTests
         public PowerFxTests(CustomWebApplicationFactory factory)
         {
             _factory = factory;
-            _client = factory.CreateClientWithAuth();
+            _client = factory.CreateTestClient();
         }
 
         // Actually call through Power Fx infrastructure.

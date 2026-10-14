@@ -17,6 +17,8 @@ https://github.com/microsoft/Power-Fx/blob/main/src/libraries/Microsoft.PowerFx.
 
 You can clone this repo, and override `ITableProvider` to provide your datasource. This project will then plumb between `RecordType` and CDP protocol. 
 
+See [CdpSampleWebApi/readme.md](CdpSampleWebApi/readme.md) for provider settings and authentication.
+
 ## Using CdpValidator
 
 This is a command line tool which is using the following options
