@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace CdpSampleWebApi
 {
-    // Helper to get a provider for a given auth token. 
+    // Creates a provider from the values in the TableProvider configuration section.
     public interface ITableProviderFactory
     {
         ITableProvider Get(IReadOnlyDictionary<string, string> settings);

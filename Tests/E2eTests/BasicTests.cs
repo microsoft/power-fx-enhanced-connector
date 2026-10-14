@@ -18,7 +18,7 @@ namespace E2eTests
         public BasicTests(CustomWebApplicationFactory factory)
         {
             _factory = factory;
-            _client = _factory.CreateClientWithAuth();
+            _client = _factory.CreateTestClient();
         }
 
         // Basic call to directly to rest API.

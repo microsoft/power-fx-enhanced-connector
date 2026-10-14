@@ -32,6 +32,7 @@ namespace CdpSampleWebApi
 
             // The provider factory is the critical piece to 
             // determine which datasource we have. 
+            // It receives the values from the TableProvider configuration section. See readme.md.
             
             //builder.Services.AddSingleton<ITableProviderFactory, DatabricksTableProviderFactory>();
             builder.Services.AddSingleton<ITableProviderFactory, TrivialTableProviderFactory>();

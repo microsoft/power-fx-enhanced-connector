@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Text;
 using CdpSampleWebApi;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.PowerFx.Databricks;
@@ -58,19 +57,10 @@ namespace E2eTests
             }
         }
 
-        public HttpClient CreateClientWithAuth()
+        // Provider settings come from configuration, so no request headers are needed.
+        public HttpClient CreateTestClient()
         {
-            var client = this.CreateClient();
-
-            // Add an Authorization token.
-            var json = "{ }";
-            var bytes = Encoding.UTF8.GetBytes(json);
-            var jwt = Convert.ToBase64String(bytes);
-
-            // jwt can't have '=', parse error.
-            client.DefaultRequestHeaders.Add("authorization", jwt);
-
-            return client;
+            return this.CreateClient();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Text.Json;
 using CdpSampleWebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.PowerFx.Connectors;
@@ -16,20 +15,33 @@ namespace CdpSampleWebApi.Controllers
     // For Power Apps, routes must be hosted directly at /, and not have any additional prefix. 
     // Webapp can have the extra prefix and things. It's just that the connector needs to have extra logic in Policies.xml
     // which is a runtime logic where we can update the backend url with prefixes. 
+    // This sample doesn't authenticate callers. See readme.md before connecting it to real data.
     [ApiController]
     [Route("")]
     public class CdpController : ControllerBase
     {
+        /// <summary>
+        /// Configuration section whose values are passed to <see cref="ITableProviderFactory.Get"/>.
+        /// </summary>
+        public const string TableProviderSection = "TableProvider";
+
         private readonly ITableProviderFactory _providerFactory;
+
+        private readonly IReadOnlyDictionary<string, string> _providerSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CdpController"/> class.
         /// </summary>
         /// <param name="provider">The table provider factory.</param>
-        public CdpController(ITableProviderFactory provider)
+        /// <param name="configuration">The application configuration. Provider settings are read from the <c>TableProvider</c> section.</param>
+        public CdpController(ITableProviderFactory provider, IConfiguration configuration)
         {
             _providerFactory = provider;
-        }  
+            _providerSettings = configuration.GetSection(TableProviderSection)
+                .GetChildren()
+                .Where(setting => setting.Value != null)
+                .ToDictionary(setting => setting.Key, setting => setting.Value, StringComparer.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         /// Gets dataset metadata for Power Apps.
@@ -133,33 +145,15 @@ namespace CdpSampleWebApi.Controllers
         }
 
         /// <summary>
-        /// Gets the table provider for the current request, using the authorization header or a trivial provider if available.
+        /// Gets the table provider for the current request.
         /// </summary>
+        /// <remarks>
+        /// Provider settings come from the <c>TableProvider</c> configuration section, not from the request.
+        /// </remarks>
         /// <returns>The table provider.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if no authorization is provided and a trivial provider is not available.</exception>
         private ITableProvider GetProvider()
         {
-            var req = this.Request;
-
-            if (req.Headers.TryGetValue("authorization", out var values))
-            {
-                var authToken = values.First();
-
-                // Token is a base64 property bag
-                var json = Convert.FromBase64String(authToken);
-                var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
-
-                ITableProvider provider = this._providerFactory.Get(settings);
-                return provider;
-            }
-
-            if (_providerFactory is TrivialTableProviderFactory)
-            {
-                ITableProvider provider = _providerFactory.Get(null);
-                return provider;
-            }
-
-            throw new InvalidOperationException($"No auth");
+            return _providerFactory.Get(_providerSettings);
         }
     }
 }

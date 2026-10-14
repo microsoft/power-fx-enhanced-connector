@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerPlatformArtifacts", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplTest", "ReplTest\ReplTest.csproj", "{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CdpSampleWebApi.Tests", "Tests\CdpSampleWebApi.Tests\CdpSampleWebApi.Tests.csproj", "{5D0C7B8E-3A41-4F6E-9C2B-8E7A1D4F6B23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,12 +61,17 @@ Global
 		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E259BA4-7C3C-44C5-AD7F-565E9AE599A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D0C7B8E-3A41-4F6E-9C2B-8E7A1D4F6B23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D0C7B8E-3A41-4F6E-9C2B-8E7A1D4F6B23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D0C7B8E-3A41-4F6E-9C2B-8E7A1D4F6B23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D0C7B8E-3A41-4F6E-9C2B-8E7A1D4F6B23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BCA7D531-F746-4566-B573-BF2AC36978C5} = {B57C4A2E-7C3E-4A8D-9DD1-383758735A1A}
+		{5D0C7B8E-3A41-4F6E-9C2B-8E7A1D4F6B23} = {B57C4A2E-7C3E-4A8D-9DD1-383758735A1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD3D15C4-8E2D-464E-B48E-4266ECC81508}
